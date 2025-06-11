@@ -1,9 +1,29 @@
+import 'dart:async';
+
+import 'package:fact_fuel/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/colors.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  /// Navigate to home screen
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => DashboardScreen()),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,17 +31,13 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background gradient
+          /// Background gradient
           Container(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  AppColors.primaryDark,
-                  AppColors.secondary,
-
-                ],
+                colors: [AppColors.primaryDark, AppColors.secondary],
               ),
             ),
           ),
@@ -37,10 +53,7 @@ class SplashScreen extends StatelessWidget {
                   duration: const Duration(milliseconds: 800),
                   curve: Curves.elasticOut,
                   builder: (context, value, child) {
-                    return Transform.scale(
-                      scale: value,
-                      child: child,
-                    );
+                    return Transform.scale(scale: value, child: child);
                   },
                   child: Image.asset(
                     'lib/assets/icons/app_logo.png',
@@ -88,37 +101,28 @@ class SplashScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 40),
-
-                // Loading indicator with animation
-                TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1),
-                  duration: const Duration(milliseconds: 1200),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: child,
-                    );
-                  },
-                  child: const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    strokeWidth: 2,
-                  ),
-                ),
               ],
             ),
           ),
 
-          // Footer text
+          /// Footer text
+          /// Loading indicator with animation
           Positioned(
             bottom: 30,
-            left: 0,
-            right: 0,
+            left: 20,
+            right: 20,
             child: Center(
-              child: Text(
-                '© ${DateTime.now().year} FactFuel',
-                style: const TextStyle(
-                  color: Colors.white54,
-                  fontSize: 12,
+              child: TweenAnimationBuilder(
+                tween: Tween<double>(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 1200),
+                builder: (context, value, child) {
+                  return Opacity(opacity: value, child: child);
+                },
+                child: LinearProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.orangeAccent.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(21),
                 ),
               ),
             ),
