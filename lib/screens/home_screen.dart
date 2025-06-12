@@ -1,3 +1,4 @@
+import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/colors.dart';
@@ -10,33 +11,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColors.background,
+
+      /// app bar
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'FactFuel',
-          style: TextStyle(
+          style: myTextStyle21(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            textColor: Colors.white,
           ),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.menu_rounded),
+          color: Colors.white,
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32)),
+        ),
+
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {},
             color: AppColors.textPrimary,
           ),
-          IconButton(
-            icon: const Icon(Icons.bookmark_border),
-            onPressed: () {},
-            color: AppColors.textPrimary,
-          ),
         ],
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.primary,
         elevation: 0,
       ),
+
+      drawer: Drawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -59,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
     );
   }
 
