@@ -30,65 +30,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      extendBody: true,
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: bottomBarPages,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        extendBody: true,
+        body: PageView(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: bottomBarPages,
+        ),
+        bottomNavigationBar:
+            (bottomBarPages.length <= maxCount)
+                ? AnimatedNotchBottomBar(
+                  notchBottomBarController: _controller,
+                  color: AppColors.secondary,
+                  showLabel: true,
+                  textOverflow: TextOverflow.visible,
+                  maxLine: 1,
+                  kBottomRadius: 21.0,
+                  notchColor: AppColors.primary,
+                  removeMargins: false,
+                  bottomBarWidth: 500,
+                  durationInMilliSeconds: 300,
+                  itemLabelStyle: myTextStyle11(),
+                  elevation: 1,
+                  kIconSize: 24.0,
+                  showBlurBottomBar: true,
+      
+                  bottomBarItems: [
+                    BottomBarItem(
+                      inActiveItem: Icon(
+                        Icons.home_filled,
+                        color: Colors.blueGrey,
+                      ),
+                      activeItem: Icon(
+                        Icons.home_filled,
+                        color: Colors.white,
+                      ),
+                      itemLabel: "Home",
+                    ),
+      
+                    BottomBarItem(
+                      inActiveItem: Icon(Icons.category, color: Colors.blueGrey),
+                      activeItem: Icon(Icons.category, color:Colors.white),
+                      itemLabel: "Categories",
+                    ),
+                    BottomBarItem(
+                      inActiveItem: Icon(
+                        Icons.favorite_border_rounded,
+                        color: Colors.blueGrey,
+                      ),
+                      activeItem: Icon(Icons.favorite_rounded, color: Colors.white),
+      
+                      itemLabel: "Saved",
+                    ),
+                  ],
+                  onTap: (index) {
+                    _pageController.jumpToPage(index);
+                  },
+                )
+                : null,
       ),
-      bottomNavigationBar:
-          (bottomBarPages.length <= maxCount)
-              ? AnimatedNotchBottomBar(
-                notchBottomBarController: _controller,
-                color: AppColors.secondary,
-                showLabel: true,
-                textOverflow: TextOverflow.visible,
-                maxLine: 1,
-                kBottomRadius: 21.0,
-                notchColor: AppColors.primary,
-                removeMargins: false,
-                bottomBarWidth: 500,
-                durationInMilliSeconds: 300,
-                itemLabelStyle: myTextStyle11(),
-                elevation: 1,
-                kIconSize: 24.0,
-                showBlurBottomBar: true,
-
-                bottomBarItems: [
-                  BottomBarItem(
-                    inActiveItem: Icon(
-                      Icons.home_filled,
-                      color: Colors.blueGrey,
-                    ),
-                    activeItem: Icon(
-                      Icons.home_filled,
-                      color: Colors.white,
-                    ),
-                    itemLabel: "Home",
-                  ),
-
-                  BottomBarItem(
-                    inActiveItem: Icon(Icons.category, color: Colors.blueGrey),
-                    activeItem: Icon(Icons.category, color:Colors.white),
-                    itemLabel: "Categories",
-                  ),
-                  BottomBarItem(
-                    inActiveItem: Icon(
-                      Icons.favorite_border_rounded,
-                      color: Colors.blueGrey,
-                    ),
-                    activeItem: Icon(Icons.favorite_rounded, color: Colors.white),
-
-                    itemLabel: "Saved",
-                  ),
-                ],
-                onTap: (index) {
-                  _pageController.jumpToPage(index);
-                },
-              )
-              : null,
     );
   }
 }

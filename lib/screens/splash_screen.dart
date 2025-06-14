@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:fact_fuel/screens/dashboard_screen.dart';
+import 'package:fact_fuel/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../helper/colors.dart';
 
@@ -17,10 +19,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 2), () {
+      /// exit from full screen
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => DashboardScreen()),
+        MaterialPageRoute(builder: (_) => LoginScreen()),
       );
     });
   }

@@ -15,62 +15,64 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: AppColors.background,
-
-      /// app bar
-      appBar: AppBar(
-        title: Text(
-          'FactFuel',
-          style: myTextStyle21(
-            fontWeight: FontWeight.bold,
-            textColor: Colors.white,
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: AppColors.background,
+      
+        /// app bar
+        appBar: AppBar(
+          title: Text(
+            'FactFuel',
+            style: myTextStyle21(
+              fontWeight: FontWeight.bold,
+              textColor: Colors.white,
+            ),
           ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.menu_rounded),
-          color: Colors.white,
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32)),
-        ),
-
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-            color: AppColors.textPrimary,
+          leading: IconButton(
+            icon: Icon(Icons.menu_rounded),
+            color: Colors.white,
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
           ),
-        ],
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-      ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32)),
+          ),
 
-      drawer: Drawer(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome section
-            _buildWelcomeSection(),
-            const SizedBox(height: 24),
-
-            // Daily featured fact
-            _buildDailyFactCard(),
-            const SizedBox(height: 24),
-
-            // Categories section
-            _buildCategoriesSection(),
-            const SizedBox(height: 24),
-
-            // Trending facts
-            _buildTrendingSection(),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {},
+              color: AppColors.textPrimary,
+            ),
           ],
+          backgroundColor: AppColors.primary,
+          elevation: 0,
+        ),
+      
+        drawer: Drawer(),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Welcome section
+              _buildWelcomeSection(),
+              const SizedBox(height: 24),
+      
+              // Daily featured fact
+              _buildDailyFactCard(),
+              const SizedBox(height: 24),
+      
+              // Categories section
+              _buildCategoriesSection(),
+              const SizedBox(height: 24),
+      
+              // Trending facts
+              _buildTrendingSection(),
+            ],
+          ),
         ),
       ),
     );

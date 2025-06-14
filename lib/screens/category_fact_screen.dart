@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../helper/colors.dart';
 
 class CategoryFactsScreen extends StatefulWidget {
@@ -58,7 +59,25 @@ class _CategoryFactsScreenState extends State<CategoryFactsScreen> {
                             color: Colors.grey,
                           ),
                           const SizedBox(width: 16),
-                          Icon(Icons.copy, size: 18, color: Colors.grey),
+
+                          /// Copy icon with onTap to copy the text
+                          GestureDetector(
+                            onTap: () {
+                              Clipboard.setData(
+                                ClipboardData(
+                                  text: facts['fact'] ?? "No Facts",
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Copied to clipboard")),
+                              );
+                            },
+                            child: Icon(
+                              Icons.copy,
+                              size: 18,
+                              color: Colors.grey,
+                            ),
+                          ),
                           const Spacer(),
                           Icon(Icons.share, size: 18, color: Colors.grey),
                         ],
