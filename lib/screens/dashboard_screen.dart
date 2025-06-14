@@ -76,10 +76,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   BottomBarItem(
                     inActiveItem: Icon(
-                      Icons.bookmark_border,
+                      Icons.favorite_border_rounded,
                       color: Colors.blueGrey,
                     ),
-                    activeItem: Icon(Icons.bookmark, color: Colors.white),
+                    activeItem: Icon(Icons.favorite_rounded, color: Colors.white),
 
                     itemLabel: "Saved",
                   ),
