@@ -1,4 +1,5 @@
 import 'package:fact_fuel/helper/app_constant.dart';
+import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/colors.dart';
@@ -33,13 +34,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
       /// app bar
       appBar: AppBar(
-        title: const Text(
-          'Categories',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-          ),
-        ),
+        title: Text('Categories', style: myTextStyle18()),
         backgroundColor: AppColors.surface,
         elevation: 0,
       ),
@@ -99,6 +94,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             builder:
                                 (context) => CategoryFactsScreen(
                                   collectionName: "science_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/science_background.jpg",
+                                  appBarTitle: "Science facts",
                                 ),
                           ),
                         );
@@ -109,6 +107,22 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             builder:
                                 (context) => CategoryFactsScreen(
                                   collectionName: "history_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/history.jpg",
+                                  appBarTitle: "History facts",
+                                ),
+                          ),
+                        );
+                      } else if (category['name'] == "Technology") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                                  collectionName: "technology_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/techonogy_background.jpg",
+                                  appBarTitle: "Technology facts",
                                 ),
                           ),
                         );

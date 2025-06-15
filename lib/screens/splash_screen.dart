@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fact_fuel/screens/dashboard_screen.dart';
 import 'package:fact_fuel/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,17 +16,28 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  /// firebase auth
+  final user = FirebaseAuth.instance.currentUser;
+
   /// Navigate to home screen
   @override
   void initState() {
     super.initState();
+
     Future.delayed(Duration(seconds: 2), () {
-      /// exit from full screen
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => LoginScreen()),
-      );
+
+      if (FirebaseAuth.instance.currentUser != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => DashboardScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => LoginScreen()),
+        );
+      }
     });
   }
 

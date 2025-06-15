@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 class AppConstant {
-
   static List<Map<String, dynamic>> categories = [
     {
       'name': 'Science',
@@ -78,6 +77,4 @@ class AppConstant {
       'factCount': 37,
     },
   ];
-
-
 }

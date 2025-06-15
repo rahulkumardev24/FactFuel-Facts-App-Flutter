@@ -56,23 +56,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   elevation: 1,
                   kIconSize: 24.0,
                   showBlurBottomBar: true,
-      
+                  shadowElevation: 2,
+
                   bottomBarItems: [
                     BottomBarItem(
                       inActiveItem: Icon(
                         Icons.home_filled,
                         color: Colors.blueGrey,
                       ),
-                      activeItem: Icon(
-                        Icons.home_filled,
-                        color: Colors.white,
-                      ),
+                      activeItem: Icon(Icons.home_filled, color: Colors.white),
                       itemLabel: "Home",
                     ),
-      
+
                     BottomBarItem(
-                      inActiveItem: Icon(Icons.category, color: Colors.blueGrey),
-                      activeItem: Icon(Icons.category, color:Colors.white),
+                      inActiveItem: Icon(
+                        Icons.category,
+                        color: Colors.blueGrey,
+                      ),
+                      activeItem: Icon(Icons.category, color: Colors.white),
                       itemLabel: "Categories",
                     ),
                     BottomBarItem(
@@ -80,8 +81,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Icons.favorite_border_rounded,
                         color: Colors.blueGrey,
                       ),
-                      activeItem: Icon(Icons.favorite_rounded, color: Colors.white),
-      
+                      activeItem: Icon(
+                        Icons.favorite_rounded,
+                        color: Colors.white,
+                      ),
+
                       itemLabel: "Saved",
                     ),
                   ],

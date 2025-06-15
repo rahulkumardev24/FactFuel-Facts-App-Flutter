@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fact_fuel/helper/app_constant.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/colors.dart';
 
@@ -13,13 +16,55 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Future<Map<String, dynamic>?> getDailyFact() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    /// Get today's date
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+
+    /// Check if we already stored today
+    final lastDate = prefs.getString('last_shown_date');
+    int lastIndex = prefs.getInt('last_fact_index') ?? 0;
+
+    /// Fetch all facts from Firestore
+    final snapshot =
+        await FirebaseFirestore.instance.collection('facts_of_day').get();
+    final allFacts = snapshot.docs;
+
+    if (allFacts.isEmpty) return null;
+
+    /// If date changed, increment index
+    if (lastDate != today) {
+      lastIndex = (lastIndex + 1) % allFacts.length;
+      await prefs.setString('last_shown_date', today);
+      await prefs.setInt('last_fact_index', lastIndex);
+    }
+
+    return allFacts[lastIndex].data();
+  }
+
+  String dailyFact = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadFact();
+  }
+
+  Future<void> loadFact() async {
+    final factData = await getDailyFact();
+    setState(() {
+      dailyFact = factData?['fact'] ?? 'No fact found';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: AppColors.background,
-      
+
         /// app bar
         appBar: AppBar(
           title: Text(
@@ -50,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: AppColors.primary,
           elevation: 0,
         ),
-      
+
         drawer: Drawer(),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -60,15 +105,15 @@ class _HomeScreenState extends State<HomeScreen> {
               // Welcome section
               _buildWelcomeSection(),
               const SizedBox(height: 24),
-      
-              // Daily featured fact
-              _buildDailyFactCard(),
+
+              /// Daily featured fact
+              _buildDailyFactCard(dailyFact),
               const SizedBox(height: 24),
-      
-              // Categories section
+
+              /// Categories section
               _buildCategoriesSection(),
               const SizedBox(height: 24),
-      
+
               // Trending facts
               _buildTrendingSection(),
             ],
@@ -80,45 +125,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// ------------- Widgets ------------------- ///
 
+  /// welcome card
   Widget _buildWelcomeSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Hello, Fact Explorer!',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-          ),
+          style: myTextStyle21(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
           'Discover amazing facts to fuel your curiosity',
-          style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+          style: myTextStyle14(textColor: Colors.black45),
         ),
       ],
     );
   }
 
-  Widget _buildDailyFactCard() {
+  /// daily fact card
+  Widget _buildDailyFactCard(String fact) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primaryDark],
-          begin: Alignment.topLeft,
+        gradient: LinearGradient(
+          colors: [Colors.orangeAccent.shade100, Colors.orangeAccent.shade200],
+          begin: Alignment.topCenter,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,36 +164,38 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.black.withAlpha(80),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Text(
+                child: Text(
                   'Fact of the Day',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                  style: myTextStyle11(textColor: Colors.white70),
                 ),
               ),
               const Spacer(),
-              const Icon(Icons.share, color: Colors.white, size: 20),
+              const Icon(Icons.copy, color: Colors.black45, size: 20),
               const SizedBox(width: 8),
-              const Icon(Icons.bookmark, color: Colors.white, size: 20),
+              const Icon(
+                Icons.favorite_border,
+                color: Colors.black45,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              const Icon(Icons.share, color: Colors.black45, size: 20),
             ],
           ),
           const SizedBox(height: 16),
-          const Text(
-            'The human nose can detect over 1 trillion different scents.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
+          Text(
+            fact,
+            style: myTextStyle16(
+              textColor: Colors.black87,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Science • 2 min read',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 12,
-            ),
+            'Daily • 1 min read',
+            style: myTextStyle11(textColor: Colors.black.withAlpha(160)),
           ),
         ],
       ),
@@ -165,51 +203,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategoriesSection() {
-    final categories = [
-      {'icon': Icons.science, 'name': 'Science', 'color': AppColors.primary},
-      {
-        'icon': Icons.history,
-        'name': 'History',
-        'color': AppColors.secondaryDark,
-      },
-      {'icon': Icons.emoji_nature, 'name': 'Nature', 'color': Colors.green},
-      {'icon': Icons.psychology, 'name': 'Psychology', 'color': Colors.purple},
-      {
-        'icon': Icons.architecture,
-        'name': 'Technology',
-        'color': Colors.orange,
-      },
-      {
-        'icon': Icons.emoji_objects,
-        'name': 'Did You Know?',
-        'color': Colors.pink,
-      },
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Categories',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-          ),
-        ),
+        Text('Categories', style: myTextStyle18()),
         const SizedBox(height: 12),
         SizedBox(
           height: 100,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: categories.length,
+            itemCount: AppConstant.categories.length,
             separatorBuilder: (context, index) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
-              final category = categories[index];
+              final category = AppConstant.categories[index];
               return _buildCategoryItem(
-                icon: category['icon'] as IconData,
-                name: category['name'] as String,
-                color: category['color'] as Color,
+                icon: category['icon'],
+                name: category['name'],
+                color: category['color'],
               );
             },
           ),
