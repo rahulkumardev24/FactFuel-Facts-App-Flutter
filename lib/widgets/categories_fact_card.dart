@@ -1,0 +1,94 @@
+import 'package:fact_fuel/helper/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:glass_kit/glass_kit.dart';
+import '../helper/custom_text_style.dart';
+import '../helper/fact_utils.dart';
+
+class CategoriesFactCard extends StatelessWidget {
+  final String fact;
+
+  const CategoriesFactCard({super.key, required this.fact});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: GlassContainer(
+        height: size.height * 0.2,
+        gradient: LinearGradient(
+          colors: [Colors.black.withAlpha(80), Colors.black.withAlpha(10)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderGradient: LinearGradient(
+          colors: [
+            AppColors.primary.withAlpha(60),
+            AppColors.primaryDark.withAlpha(40),
+            AppColors.primary.withAlpha(40),
+            AppColors.primaryDark.withAlpha(80),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0.0, 0.39, 0.40, 1.0],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        blur: 12.0,
+        borderWidth: 1.5,
+        elevation: 3.0,
+        isFrostedGlass: false,
+        shadowColor: Colors.black.withAlpha(40),
+        alignment: Alignment.center,
+        frostedOpacity: 0.19,
+
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(fact, style: myTextStyle16(textColor: Colors.white70)),
+              SizedBox(height: size.height * 0.01),
+
+              Divider(color: Colors.white10, thickness: 2),
+              SizedBox(height: size.height * 0.01),
+
+              /// fav button
+              /// ---> add to fav button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FactUtils.favoriteStatusStream(fact),
+                    builder: (context, favSnapshot) {
+                      bool isSaved = favSnapshot.data?.exists ?? false;
+
+                      /// save to favorites
+                      return GestureDetector(
+                        onTap: () => FactUtils.toggleFavorite(fact, isSaved),
+                        child: Icon(
+                          isSaved ? Icons.favorite : Icons.favorite_border,
+                          size: 21,
+                          color: isSaved ? Colors.red : Colors.white38,
+                        ),
+                      );
+                    },
+                  ),
+
+                  /// Copy icon with onTap to copy the text
+                  GestureDetector(
+                    onTap: () => FactUtils.copyToClipboard(context, fact),
+                    child: Icon(Icons.copy, size: 21, color: Colors.white54),
+                  ),
+
+                  Icon(Icons.share, size: 21, color: Colors.white54),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

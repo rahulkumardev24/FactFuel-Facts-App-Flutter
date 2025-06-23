@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../helper/colors.dart';
+import '../widgets/categories_fact_card.dart';
 
 class CategoryFactsScreen extends StatefulWidget {
   String collectionName;
@@ -34,11 +35,12 @@ class _CategoryFactsScreenState extends State<CategoryFactsScreen> {
       ),
       body: Stack(
         children: [
+          /// background image
           SizedBox(
             height: double.infinity,
             width: double.infinity,
             child: Opacity(
-              opacity: 0.5,
+              opacity: 0.9,
               child: Image.asset(widget.backGroundImage, fit: BoxFit.cover),
             ),
           ),
@@ -57,124 +59,19 @@ class _CategoryFactsScreenState extends State<CategoryFactsScreen> {
                 return Center(child: Text("Data is Empty"));
               }
               final myData = snapshot.data!.docs;
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 32),
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: myData.length,
-                    itemBuilder: (context, index) {
-                      final facts =
-                          myData[index].data() as Map<String, dynamic>;
-                      return Card(
-                        color: Colors.white70,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                facts['fact'] ?? "No Facts",
-                                style: myTextStyle16(),
-                              ),
-                              const SizedBox(height: 12),
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 32),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: myData.length,
+                  itemBuilder: (context, index) {
+                    final facts = myData[index].data() as Map<String, dynamic>;
 
-                              /// fav button
-                              /// ---> add to fav button
-                              Row(
-                                children: [
-                                  StreamBuilder<DocumentSnapshot>(
-                                    stream:
-                                        FirebaseFirestore.instance
-                                            .collection("users")
-                                            .doc(
-                                              FirebaseAuth
-                                                  .instance
-                                                  .currentUser!
-                                                  .uid,
-                                            )
-                                            .collection("favorites")
-                                            .doc(facts['fact'])
-                                            .snapshots(),
-                                    builder: (context, favSnapshot) {
-                                      bool isSaved =
-                                          favSnapshot.data?.exists ?? false;
-
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          final favRef = FirebaseFirestore
-                                              .instance
-                                              .collection("users")
-                                              .doc(
-                                                FirebaseAuth
-                                                    .instance
-                                                    .currentUser!
-                                                    .uid,
-                                              )
-                                              .collection("favorites")
-                                              .doc(facts['fact']);
-
-                                          if (isSaved) {
-                                            await favRef.delete();
-                                          } else {
-                                            await favRef.set({
-                                              'fact': facts['fact'],
-                                            });
-                                          }
-                                        },
-                                        child: Icon(
-                                          isSaved
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          size: 18,
-                                          color:
-                                              isSaved
-                                                  ? Colors.red
-                                                  : Colors.black45,
-                                        ),
-                                      );
-                                    },
-                                  ),
-
-                                  const SizedBox(width: 16),
-
-                                  /// Copy icon with onTap to copy the text
-                                  GestureDetector(
-                                    onTap: () {
-                                      Clipboard.setData(
-                                        ClipboardData(
-                                          text: facts['fact'] ?? "No Facts",
-                                        ),
-                                      );
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text("Copied to clipboard"),
-                                        ),
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.copy,
-                                      size: 18,
-                                      color: Colors.black45,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Icon(
-                                    Icons.share,
-                                    size: 18,
-                                    color: Colors.black45,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                    /// call Categories Fact Card
+                    return CategoriesFactCard(
+                      fact: facts['fact'] ?? "No Facts",
+                    );
+                  },
                 ),
               );
             },

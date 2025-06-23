@@ -71,9 +71,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   builder: (context, value, child) {
                     return Transform.scale(scale: value, child: child);
                   },
-                  child: Image.asset(
-                    'lib/assets/icons/app_logo.png',
-                    width: 150,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.asset(
+                      'lib/assets/icons/app_logo.png',
+                      width: 150,
+                    ),
                   ),
                 ),
 

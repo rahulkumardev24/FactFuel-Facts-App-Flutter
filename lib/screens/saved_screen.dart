@@ -25,10 +25,7 @@ class _SavedFactsScreenState extends State<SavedScreen> {
         ),
         backgroundColor: AppColors.primary,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white54),
-          onPressed: () => Navigator.pop(context),
-        ),
+
       ),
       body: Stack(
         children: [

@@ -126,6 +126,104 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ),
                           ),
                         );
+                      }else if(category['name'] == "Nature"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "nature_facts",
+                              backGroundImage:
+                              "lib/assets/images/nature_background.jpg",
+                              appBarTitle: "Nature facts",
+                            ),
+                          ),
+                        );
+
+                      }else if(category['name'] == "Space"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "space_facts",
+                              backGroundImage:
+                              "lib/assets/images/space_background.jpg",
+                              appBarTitle: "Space facts",
+                            ),
+                          ),
+                        );
+
+                      }else if(category['name'] == "Animals"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "animals_facts",
+                              backGroundImage:
+                              "lib/assets/images/animal_background.jpg",
+                              appBarTitle: "Animal facts",
+                            ),
+                          ),
+                        );
+
+                      }else if(category['name'] == "Sports"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "sports_facts",
+                              backGroundImage:
+                              "lib/assets/images/sports_background.jpg",
+                              appBarTitle: "Sport facts",
+                            ),
+                          ),
+                        );
+
+                      }else if(category['name'] == "Art"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "art_facts",
+                              backGroundImage:
+                              "lib/assets/images/art_background.jpg",
+                              appBarTitle: "Art facts",
+                            ),
+                          ),
+                        );
+
+                      }else if(category['name'] == "Food"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "food_facts",
+                              backGroundImage:
+                              "lib/assets/images/food_background.jpg",
+                              appBarTitle: "Food facts",
+                            ),
+                          ),
+                        );
+
+                      }else if(category['name'] == "Health"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "health_facts",
+                              backGroundImage:
+                              "lib/assets/images/health_background.jpg",
+                              appBarTitle: "Health facts",
+                            ),
+                          ),
+                        );
+
                       }
                     },
                   );
