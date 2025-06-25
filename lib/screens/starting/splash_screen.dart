@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:fact_fuel/screens/dashboard_screen.dart';
-import 'package:fact_fuel/screens/login_screen.dart';
+import 'package:fact_fuel/screens/starting/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../helper/colors.dart';
+import '../../helper/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

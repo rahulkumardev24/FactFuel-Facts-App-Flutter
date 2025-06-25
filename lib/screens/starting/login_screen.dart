@@ -4,7 +4,7 @@ import 'package:fact_fuel/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 
-import '../helper/colors.dart';
+import '../../helper/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -296,6 +296,7 @@ class _LoginScreenState extends State<LoginScreen>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           // Decorative background
           Container(
@@ -317,6 +318,7 @@ class _LoginScreenState extends State<LoginScreen>
             padding: EdgeInsets.all(24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
                   "lib/assets/icons/fact.png",

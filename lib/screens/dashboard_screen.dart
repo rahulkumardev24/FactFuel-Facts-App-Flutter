@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fact_fuel/screens/home_screen.dart';
 import 'package:fact_fuel/screens/categories_screen.dart';
 import 'package:fact_fuel/screens/saved_screen.dart';
+import 'package:flutter/services.dart';
 import '../helper/colors.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -30,60 +32,83 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.background,
         extendBody: true,
-        body: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: bottomBarPages,
+        body: SafeArea(
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: bottomBarPages,
+          ),
         ),
         bottomNavigationBar:
             (bottomBarPages.length <= maxCount)
                 ? AnimatedNotchBottomBar(
                   notchBottomBarController: _controller,
-                  color: AppColors.secondary,
+                  /// bottom bar background
+                  color: AppColors.primary,
                   showLabel: true,
                   textOverflow: TextOverflow.visible,
+                  showBlurBottomBar: true,
                   maxLine: 1,
                   kBottomRadius: 21.0,
                   notchColor: AppColors.primary,
                   removeMargins: false,
-                  bottomBarWidth: 500,
+                  showBottomRadius: true,
+                  showShadow: false,
+                  showTopRadius: true,
+                  blurOpacity: 0.2 ,
                   durationInMilliSeconds: 300,
-                  itemLabelStyle: myTextStyle11(),
-                  elevation: 1,
+                  itemLabelStyle: myTextStyle11(
+                    textColor: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  elevation: 0,
                   kIconSize: 24.0,
-                  showBlurBottomBar: true,
-                  shadowElevation: 2,
+                  shadowElevation: 0,
+                  bottomBarWidth: size.width,
+                  bottomBarHeight:
+                      size.height >= 600
+                          ? size.height * 0.08
+                          : size.height * 0.05,
 
                   bottomBarItems: [
+                    /// home
                     BottomBarItem(
                       inActiveItem: Icon(
-                        Icons.home_filled,
-                        color: Colors.blueGrey,
-                      ),
-                      activeItem: Icon(Icons.home_filled, color: Colors.white),
-                      itemLabel: "Home",
-                    ),
-
-                    BottomBarItem(
-                      inActiveItem: Icon(
-                        Icons.category,
-                        color: Colors.blueGrey,
-                      ),
-                      activeItem: Icon(Icons.category, color: Colors.white),
-                      itemLabel: "Categories",
-                    ),
-                    BottomBarItem(
-                      inActiveItem: Icon(
-                        Icons.favorite_border_rounded,
-                        color: Colors.blueGrey,
+                        CupertinoIcons.house_alt,
+                        color: AppColors.iconSecondary,
                       ),
                       activeItem: Icon(
-                        Icons.favorite_rounded,
-                        color: Colors.white,
+                        CupertinoIcons.house_alt_fill,
+                        color: AppColors.iconPrimary,
+                      ),
+                      itemLabel: "Home",
+                    ),
+                    /// categories
+                    BottomBarItem(
+                      inActiveItem: Icon(
+                        CupertinoIcons.rectangle_on_rectangle_angled,
+                        color: AppColors.iconSecondary,
+                      ),
+                      activeItem: Icon(
+                        CupertinoIcons.rectangle_fill_on_rectangle_angled_fill,
+                        color: AppColors.iconPrimary,
+                      ),
+                      itemLabel: "Categories",
+                    ),
+                    /// saved
+                    BottomBarItem(
+                      inActiveItem: Icon(
+                        CupertinoIcons.heart,
+                        color: AppColors.iconSecondary,
+                      ),
+                      activeItem: Icon(
+                        CupertinoIcons.heart_fill,
+                        color: AppColors.iconPrimary,
                       ),
 
                       itemLabel: "Saved",

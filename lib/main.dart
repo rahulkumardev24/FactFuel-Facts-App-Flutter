@@ -1,10 +1,7 @@
-import 'package:fact_fuel/screens/categories_screen.dart';
-import 'package:fact_fuel/screens/login_screen.dart';
-import 'package:fact_fuel/screens/splash_screen.dart';
+import 'package:fact_fuel/screens/starting/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 import 'firebase_options.dart';
 import 'helper/colors.dart';
@@ -26,14 +23,6 @@ void main() async {
     );
   });
 
-  /// ✅ Change status bar color here
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      statusBarColor: AppColors.primary,
-      statusBarIconBrightness: Brightness.light,
-    ),
-  );
-
   runApp(const MyApp());
 }
 
@@ -42,10 +31,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'FactFuel',
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: MaterialApp(
+        title: 'FactFuel',
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
 }

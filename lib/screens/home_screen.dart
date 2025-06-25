@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/helper/app_constant.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
+import 'package:fact_fuel/helper/fact_utils.dart';
+import 'package:fact_fuel/widgets/my_icon_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:shimmer/shimmer.dart';
+import 'package:velocity_x/velocity_x.dart';
 import '../helper/colors.dart';
+import '../widgets/custom_app_bar.dart';
+import '../widgets/trending_fact_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,34 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Future<Map<String, dynamic>?> getDailyFact() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    /// Get today's date
-    final today = DateTime.now().toIso8601String().substring(0, 10);
-
-    /// Check if we already stored today
-    final lastDate = prefs.getString('last_shown_date');
-    int lastIndex = prefs.getInt('last_fact_index') ?? 0;
-
-    /// Fetch all facts from Firestore
-    final snapshot =
-        await FirebaseFirestore.instance.collection('facts_of_day').get();
-    final allFacts = snapshot.docs;
-
-    if (allFacts.isEmpty) return null;
-
-    /// If date changed, increment index
-    if (lastDate != today) {
-      lastIndex = (lastIndex + 1) % allFacts.length;
-      await prefs.setString('last_shown_date', today);
-      await prefs.setInt('last_fact_index', lastIndex);
-    }
-
-    return allFacts[lastIndex].data();
-  }
-
   String dailyFact = '';
 
   @override
@@ -52,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> loadFact() async {
-    final factData = await getDailyFact();
+    final factData = await FactUtils.getDailyFact();
     setState(() {
       dailyFact = factData?['fact'] ?? 'No fact found';
     });
@@ -60,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -67,55 +45,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
         /// app bar
         appBar: AppBar(
-          title: Text(
-            'FactFuel',
-            style: myTextStyle21(
-              fontWeight: FontWeight.bold,
-              textColor: Colors.white,
-            ),
+          automaticallyImplyLeading: false,
+          flexibleSpace: CustomAppBar(
+            title: "FactFuel",
+            icon: Icons.menu_rounded,
+            onIconPressed: () => _scaffoldKey.currentState?.openDrawer(),
           ),
-          leading: IconButton(
-            icon: Icon(Icons.menu_rounded),
-            color: Colors.white,
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32)),
-          ),
-
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-              color: AppColors.textPrimary,
-            ),
-          ],
-          backgroundColor: AppColors.primary,
-          elevation: 0,
         ),
 
         drawer: Drawer(),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Welcome section
-              _buildWelcomeSection(),
+              /// Welcome section
+              _buildWelcomeSection(size),
               const SizedBox(height: 24),
 
-              /// Daily featured fact
-              _buildDailyFactCard(dailyFact),
-              const SizedBox(height: 24),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                child: Column(
+                  children: [
+                    /// Daily featured fact
+                    _buildDailyFactCard(dailyFact),
+                    const SizedBox(height: 24),
 
-              /// Categories section
-              _buildCategoriesSection(),
-              const SizedBox(height: 24),
+                    /// Categories section
+                    _buildCategoriesSection(size),
+                    const SizedBox(height: 24),
 
-              // Trending facts
-              _buildTrendingSection(),
+                    /// trending
+                    _buildTrendingSection(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -126,27 +89,37 @@ class _HomeScreenState extends State<HomeScreen> {
   /// ------------- Widgets ------------------- ///
 
   /// welcome card
-  Widget _buildWelcomeSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Hello, Fact Explorer!',
-          style: myTextStyle21(fontWeight: FontWeight.bold),
+  Widget _buildWelcomeSection(Size size) {
+    return VxArc(
+      arcType: VxArcType.convey,
+      height: size.height * 0.02,
+      child: Container(
+        width: double.infinity,
+        height: size.height * 0.1,
+        decoration: BoxDecoration(color: AppColors.primary),
+        child: Padding(
+          padding: EdgeInsets.only(left: size.width * 0.03),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hello, Fact Explorer!',
+                style: myTextStyle24(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Discover amazing facts to fuel your curiosity',
+                style: myTextStyle14(textColor: AppColors.background),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Discover amazing facts to fuel your curiosity',
-          style: myTextStyle14(textColor: Colors.black45),
-        ),
-      ],
+      ),
     );
   }
 
   /// daily fact card
   Widget _buildDailyFactCard(String fact) {
     return Container(
-      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -164,24 +137,38 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.black.withAlpha(80),
+                  color: AppColors.background.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   'Fact of the Day',
-                  style: myTextStyle11(textColor: Colors.white70),
+                  style: myTextStyle11(textColor: AppColors.textSecondary),
                 ),
               ),
               const Spacer(),
-              const Icon(Icons.copy, color: Colors.black45, size: 20),
-              const SizedBox(width: 8),
-              const Icon(
-                Icons.favorite_border,
-                color: Colors.black45,
-                size: 20,
+
+              MyIconButton(
+                icon: Icons.copy_rounded,
+                onTap: () => FactUtils.copyToClipboard(context, fact),
               ),
               const SizedBox(width: 8),
-              const Icon(Icons.share, color: Colors.black45, size: 20),
+              // Favorite Icon with StreamBuilder
+              StreamBuilder<DocumentSnapshot>(
+                stream: FactUtils.favoriteStatusStream(fact),
+                builder: (context, snapshot) {
+                  final isSaved = snapshot.data?.exists ?? false;
+                  return MyIconButton(
+                    icon:
+                        isSaved
+                            ? CupertinoIcons.heart_fill
+                            : CupertinoIcons.heart,
+                    iconColor: isSaved ? Colors.red : AppColors.iconDark,
+                    onTap: () => FactUtils.toggleFavorite(fact, isSaved),
+                  );
+                },
+              ),
+              const SizedBox(width: 8),
+              MyIconButton(icon: Icons.share_rounded, onTap: () {}),
             ],
           ),
           const SizedBox(height: 16),
@@ -202,14 +189,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategoriesSection() {
+  Widget _buildCategoriesSection(Size size) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Categories', style: myTextStyle18()),
+        Text(
+          'Categories',
+          style: myTextStyle18(textColor: AppColors.textSecondary),
+        ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 100,
+          height: size.height * 0.1,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: AppConstant.categories.length,
@@ -220,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: category['icon'],
                 name: category['name'],
                 color: category['color'],
+                size: size,
               );
             },
           ),
@@ -232,151 +223,66 @@ class _HomeScreenState extends State<HomeScreen> {
     required IconData icon,
     required String name,
     required Color color,
+    required Size size,
   }) {
     return Column(
       children: [
         Container(
-          width: 60,
-          height: 60,
+          width: size.height * 0.07,
+          height: size.height * 0.06,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Icon(icon, color: color, size: 28),
         ),
         const SizedBox(height: 8),
-        Text(
-          name,
-          style: TextStyle(fontSize: 12, color: AppColors.textPrimary),
-        ),
+        Text(name, style: myTextStyle12(textColor: AppColors.textSecondary)),
       ],
     );
   }
 
   Widget _buildTrendingSection() {
-    final trendingFacts = [
-      {
-        'title': 'Octopuses have three hearts',
-        'category': 'Nature',
-        'likes': '1.2k',
-      },
-      {
-        'title': 'The shortest war lasted 38 minutes',
-        'category': 'History',
-        'likes': '890',
-      },
-      {
-        'title': 'Bananas are berries, strawberries aren\'t',
-        'category': 'Food',
-        'likes': '2.4k',
-      },
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Text(
-              'Trending Now',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+            Shimmer.fromColors(
+              baseColor: Color(0xFFFF6F00),
+              highlightColor: Color(0xFFFFF176),
+
+              child: Text('Trending Now', style: myTextStyle18()),
             ),
             const Spacer(),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'See All',
-                style: TextStyle(color: AppColors.primary),
-              ),
-            ),
           ],
         ),
         const SizedBox(height: 12),
-        ListView.separated(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: trendingFacts.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final fact = trendingFacts[index];
-            return _buildTrendingFactCard(
-              title: fact['title'] as String,
-              category: fact['category'] as String,
-              likes: fact['likes'] as String,
+        FutureBuilder<List<Map<String, dynamic>>>(
+          future: FactUtils.getTrendingFacts(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: const CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Text("No trending facts yet.");
+            }
+            final trendingFacts = snapshot.data!;
+            return ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                final data = trendingFacts[index];
+                final fact = data['fact'] ?? '';
+                final likes = data['count'] ?? 0;
+                return TrendingFactCard(fact: fact, likes: likes.toString());
+              },
             );
           },
         ),
       ],
-    );
-  }
-
-  Widget _buildTrendingFactCard({
-    required String title,
-    required String category,
-    required String likes,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  category,
-                  style: TextStyle(color: AppColors.primary, fontSize: 12),
-                ),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.favorite_border,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    likes,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

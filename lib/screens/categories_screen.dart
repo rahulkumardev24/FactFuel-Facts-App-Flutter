@@ -1,6 +1,7 @@
 import 'package:fact_fuel/helper/app_constant.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../helper/colors.dart';
 import '../widgets/categories_card.dart';
@@ -28,14 +29,33 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reset status bar when returning to this screen
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+    );
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
+
+
+
+
     return Scaffold(
       backgroundColor: AppColors.background,
 
       /// app bar
       appBar: AppBar(
         title: Text('Categories', style: myTextStyle18()),
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.primary,
         elevation: 0,
       ),
 

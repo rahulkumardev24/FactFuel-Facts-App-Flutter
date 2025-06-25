@@ -28,7 +28,7 @@ class _CategoryFactsScreenState extends State<CategoryFactsScreen> {
       appBar: AppBar(
         title: Text(
           widget.appBarTitle,
-          style: myTextStyle18(textColor: Colors.white54),
+          style: myTextStyle18(textColor: AppColors.textPrimary),
         ),
         backgroundColor: AppColors.primary,
         elevation: 0,

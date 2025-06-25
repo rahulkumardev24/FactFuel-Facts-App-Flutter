@@ -16,6 +16,20 @@ TextStyle myTextStyle11({
   );
 }
 
+/// size 11
+TextStyle myTextStyle12({
+  FontWeight fontWeight = FontWeight.normal,
+  Color textColor = Colors.black,
+  String fontFamily = "primary",
+}) {
+  return TextStyle(
+    fontWeight: fontWeight,
+    fontSize: 12,
+    color: textColor,
+    fontFamily: fontFamily,
+  );
+}
+
 /// size 14
 TextStyle myTextStyle14({
   FontWeight fontWeight = FontWeight.normal,
@@ -69,6 +83,20 @@ TextStyle myTextStyle21({
     fontWeight: fontWeight,
     fontFamily: fontFamily,
     fontSize: 21,
+    color: textColor,
+  );
+}
+
+/// size 22
+TextStyle myTextStyle24({
+  FontWeight fontWeight = FontWeight.normal,
+  String fontFamily = "primary",
+  Color textColor = Colors.black,
+}) {
+  return TextStyle(
+    fontWeight: fontWeight,
+    fontFamily: fontFamily,
+    fontSize: 24,
     color: textColor,
   );
 }
