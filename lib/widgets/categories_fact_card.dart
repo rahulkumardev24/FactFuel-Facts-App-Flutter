@@ -1,4 +1,6 @@
 import 'package:fact_fuel/helper/colors.dart';
+import 'package:fact_fuel/widgets/my_icon_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:glass_kit/glass_kit.dart';
@@ -65,24 +67,32 @@ class CategoriesFactCard extends StatelessWidget {
                       bool isSaved = favSnapshot.data?.exists ?? false;
 
                       /// save to favorites
-                      return GestureDetector(
+                      return MyIconButton(
+                        icon:
+                            isSaved
+                                ? CupertinoIcons.heart_fill
+                                : CupertinoIcons.heart,
+                        iconColor:
+                            isSaved ? Colors.red : AppColors.iconSecondary,
+
                         onTap: () => FactUtils.toggleFavorite(fact, isSaved),
-                        child: Icon(
-                          isSaved ? Icons.favorite : Icons.favorite_border,
-                          size: 21,
-                          color: isSaved ? Colors.red : Colors.white38,
-                        ),
                       );
                     },
                   ),
 
                   /// Copy icon with onTap to copy the text
-                  GestureDetector(
+                  MyIconButton(
+                    icon: Icons.copy_rounded,
+                    iconColor: AppColors.iconSecondary,
                     onTap: () => FactUtils.copyToClipboard(context, fact),
-                    child: Icon(Icons.copy, size: 21, color: Colors.white54),
                   ),
 
-                  Icon(Icons.share, size: 21, color: Colors.white54),
+                  MyIconButton(
+                    icon: Icons.share_rounded,
+                    iconColor: AppColors.iconSecondary,
+
+                    onTap: () {},
+                  ),
                 ],
               ),
             ],

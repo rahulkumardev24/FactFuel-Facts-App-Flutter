@@ -17,13 +17,14 @@ class TrendingFactCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(12),
           color: AppColors.primary.withValues(alpha: 0.2),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 fact,
@@ -31,7 +32,7 @@ class TrendingFactCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              Divider(color: AppColors.iconSecondary.withValues(alpha: 0.1),),
+              Divider(color: AppColors.iconSecondary.withValues(alpha: 0.1)),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -40,7 +41,7 @@ class TrendingFactCard extends StatelessWidget {
                     iconColor: AppColors.iconSecondary,
                     onTap: () => FactUtils.copyToClipboard(context, fact),
                   ),
-                  SizedBox(width: 8,),
+                  SizedBox(width: 8),
 
                   MyIconButton(
                     icon: Icons.share_rounded,

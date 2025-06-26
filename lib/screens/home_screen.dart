@@ -9,10 +9,13 @@ import 'package:shimmer/shimmer.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../helper/colors.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/custom_drawer.dart';
 import '../widgets/trending_fact_card.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(bool)? onDrawerChanged;
+
+  HomeScreen({super.key, this.onDrawerChanged});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -53,7 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
 
-        drawer: Drawer(),
+        drawer: CustomDrawer(),
+        onDrawerChanged: (isOpen) {
+          widget.onDrawerChanged?.call(isOpen);
+        },
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

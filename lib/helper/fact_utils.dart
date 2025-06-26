@@ -12,29 +12,53 @@ class FactUtils {
     ).showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
   }
 
-/*
   static Future<void> toggleFavorite(String fact, bool isSaved) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
     try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final uid = user.uid;
       final docId = fact.hashCode.toString();
-      final favRef = FirebaseFirestore.instance
+
+      final userFavRef = FirebaseFirestore.instance
           .collection("users")
           .doc(uid)
           .collection("favorites")
           .doc(docId);
 
+      final likesRef = FirebaseFirestore.instance
+          .collection("likes")
+          .doc(docId);
+
       if (isSaved) {
-        await favRef.delete();
+        await userFavRef.delete();
+        await likesRef.update({
+          'count': FieldValue.increment(-1),
+          'likedBy.$uid': FieldValue.delete(),
+        });
       } else {
-        await favRef.set({'fact': fact});
+        await userFavRef.set({'fact': fact});
+        final snap = await likesRef.get();
+
+        if (!snap.exists) {
+          await likesRef.set({
+            'fact': fact,
+            'count': 1,
+            'likedBy': {uid: true},
+          });
+        } else {
+          await likesRef.update({
+            'count': FieldValue.increment(1),
+            'likedBy.$uid': true,
+          });
+        }
       }
     } catch (e) {
-      print("Error toggling favorite: $e");
+      print("Error in toggleFavorite: $e");
     }
   }
-*/
 
-
+  /*
   static Future<void> toggleFavorite(String fact, bool isSaved) async {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -81,11 +105,17 @@ class FactUtils {
       print("Error in toggleFavorite: $e");
     }
   }
-
+*/
 
   static Stream<DocumentSnapshot> favoriteStatusStream(String fact) {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    final docId = fact.hashCode.toString(); // match toggleFavorite()
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return const Stream.empty();
+    }
+
+    final uid = user.uid;
+    final docId = fact.hashCode.toString();
+
     return FirebaseFirestore.instance
         .collection("users")
         .doc(uid)
@@ -93,7 +123,6 @@ class FactUtils {
         .doc(docId)
         .snapshots();
   }
-
 
   static Future<Map<String, dynamic>?> getDailyFact() async {
     final prefs = await SharedPreferences.getInstance();
@@ -122,16 +151,32 @@ class FactUtils {
     return allFacts[lastIndex].data();
   }
 
-
   static Future<List<Map<String, dynamic>>> getTrendingFacts() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection("likes")
-        .orderBy("count", descending: true)
-        .limit(20)
-        .get();
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection("likes")
+            .orderBy("count", descending: true)
+            .limit(20)
+            .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
+  /// fetch current user data
+  static Future<Map<String, dynamic>?> getCurrentUserData() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) return null;
 
+      final doc =
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+      if (doc.exists) {
+        return doc.data();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
