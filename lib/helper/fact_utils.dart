@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FactUtils {
@@ -177,6 +179,66 @@ class FactUtils {
       }
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  /// Submit user feedback with comprehensive device and app data
+  static Future<void> submitFeedback({
+    required String message,
+    required int rating,
+    String? email,
+    String? category,
+    BuildContext? context,
+  }) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      final packageInfo = await PackageInfo.fromPlatform();
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      final prefs = await SharedPreferences.getInstance();
+
+      // Prepare feedback data
+      final feedbackData = {
+        'message': message,
+        'rating': rating,
+        'timestamp': FieldValue.serverTimestamp(),
+        'userEmail': email ?? user?.email ?? 'anonymous',
+        'userId': user?.uid,
+        'userName': user?.displayName,
+        'category': category ?? 'general',
+        'appVersion': packageInfo.version,
+        'buildNumber': packageInfo.buildNumber,
+        'deviceModel': deviceInfo.model,
+        'deviceBrand': deviceInfo.brand,
+        'androidVersion': deviceInfo.version.release,
+        'firstLaunchDate': prefs.getString('first_launch_date'),
+        'totalLaunches': prefs.getInt('launch_count') ?? 0,
+        'platform': 'android', // For iOS: 'ios'
+      };
+
+      // Add to feedback collection
+      await FirebaseFirestore.instance
+          .collection('feedbacks')
+          .add(feedbackData);
+
+      // Show success message if context is provided
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Thanks for your feedback!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error submitting feedback: $e');
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to submit feedback. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 }

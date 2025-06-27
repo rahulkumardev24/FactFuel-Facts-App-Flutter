@@ -1,5 +1,8 @@
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:fact_fuel/helper/fact_utils.dart';
+import 'package:fact_fuel/helper/my_dialogs.dart';
+import 'package:fact_fuel/screens/drawer/about_developer_screen.dart';
+import 'package:fact_fuel/screens/drawer/feedback_screen.dart';
 import 'package:fact_fuel/screens/starting/login_screen.dart';
 import 'package:fact_fuel/widgets/my_icon_button.dart';
 import 'package:flutter/material.dart';
@@ -30,19 +33,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
       DrawerItem(
         icon: FontAwesomeIcons.shareFromSquare,
         title: "Share App",
-        onTap: () {},
+        onTap: () {
+          Navigator.pop(context);
+          MyDialogs.shareApp(context);
+        },
       ),
 
       DrawerItem(
         icon: FontAwesomeIcons.userAstronaut,
         title: "About Developer",
-        onTap: () {},
+        onTap: () {
+          Navigator.pop(context);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => AboutDeveloperScreen()),
+          );
+        },
       ),
 
       DrawerItem(
         icon: FontAwesomeIcons.comments,
         title: "Feedback",
-        onTap: () {},
+        onTap: () {
+          Navigator.pop(context) ;
+          Navigator.push(context, MaterialPageRoute(builder: (_)=> FeedbackScreen()));
+        },
       ),
 
       DrawerItem(

@@ -2,6 +2,7 @@ import 'package:fact_fuel/screens/starting/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'helper/colors.dart';
@@ -22,6 +23,14 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   });
+
+  final prefs = await SharedPreferences.getInstance();
+
+  /// Track first launch and launch count
+  if (!prefs.containsKey('first_launch_date')) {
+    prefs.setString('first_launch_date', DateTime.now().toIso8601String());
+  }
+  prefs.setInt('launch_count', (prefs.getInt('launch_count') ?? 0) + 1);
 
   runApp(const MyApp());
 }
