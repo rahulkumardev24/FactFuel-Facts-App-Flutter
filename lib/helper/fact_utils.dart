@@ -1,19 +1,18 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_constant.dart';
 
 class FactUtils {
-  static Future<void> copyToClipboard(BuildContext context, String text) async {
+  static Future<void> copyToClipboard(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Copied to clipboard")));
   }
 
   static Future<void> toggleFavorite(String fact, bool isSaved) async {
@@ -58,7 +57,7 @@ class FactUtils {
         }
       }
     } catch (e) {
-      print("Error in toggleFavorite: $e");
+        // Error toggling favorite
     }
   }
 
@@ -141,67 +140,51 @@ class FactUtils {
         return null;
       }
     } catch (e) {
+        // Error fetching user data
       throw Exception(e);
     }
   }
 
   /// Submit user feedback with comprehensive device and app data
-  static Future<void> submitFeedback({
+  /// Returns true if successful, false otherwise
+  static Future<bool> submitFeedback({
     required String message,
     required int rating,
     String? email,
     String? category,
-    BuildContext? context,
   }) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final deviceInfo = DeviceInfoPlugin();
+      final deviceData = await deviceInfo.deviceInfo;
       final packageInfo = await PackageInfo.fromPlatform();
-      final deviceInfo = await DeviceInfoPlugin().androidInfo;
-      final prefs = await SharedPreferences.getInstance();
+
+      // Get current user data if available
+      final user = FirebaseAuth.instance.currentUser;
 
       // Prepare feedback data
       final feedbackData = {
         'message': message,
         'rating': rating,
-        'timestamp': FieldValue.serverTimestamp(),
-        'userEmail': email ?? user?.email ?? 'anonymous',
+        'email': email ?? user?.email,
         'userId': user?.uid,
-        'userName': user?.displayName,
-        'category': category ?? 'general',
+        'category': category,
+        'timestamp': FieldValue.serverTimestamp(),
         'appVersion': packageInfo.version,
         'buildNumber': packageInfo.buildNumber,
-        'deviceModel': deviceInfo.model,
-        'deviceBrand': deviceInfo.brand,
-        'androidVersion': deviceInfo.version.release,
-        'firstLaunchDate': prefs.getString('first_launch_date'),
-        'totalLaunches': prefs.getInt('launch_count') ?? 0,
-        'platform': 'android', // For iOS: 'ios'
+        'deviceInfo': deviceData.data,
+        'platform': Platform.operatingSystem,
+        'platformVersion': Platform.operatingSystemVersion,
       };
 
-      // Add to feedback collection
+      // Submit to Firestore
       await FirebaseFirestore.instance
           .collection('feedbacks')
           .add(feedbackData);
 
-      // Show success message if context is provided
-      if (context != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Thanks for your feedback!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
+      return true;
     } catch (e) {
-      print('Error submitting feedback: $e');
-      if (context != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to submit feedback. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      log('Error submitting feedback: $e', name: 'FactUtils');
+      return false;
     }
   }
 

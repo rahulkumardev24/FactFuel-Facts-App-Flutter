@@ -14,10 +14,9 @@ import '../widgets/custom_drawer.dart';
 import '../widgets/trending_fact_card.dart';
 import 'category_fact_screen.dart';
 
+@immutable
 class HomeScreen extends StatefulWidget {
-  final Function(bool)? onDrawerChanged;
-
-  HomeScreen({super.key, this.onDrawerChanged});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -59,11 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
 
         drawer: CustomDrawer(),
-        onDrawerChanged: (isOpen) {
-          if (mounted) {
-            widget.onDrawerChanged?.call(isOpen);
-          }
-        },
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +153,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
               MyIconButton(
                 icon: Icons.copy_rounded,
-                onTap: () => FactUtils.copyToClipboard(context, fact),
+                onTap: () {
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
+                  FactUtils.copyToClipboard(fact).then((_) {
+                    scaffoldMessenger.showSnackBar(
+                      const SnackBar(content: Text('Copied to clipboard')),
+                    );
+                  });
+                },
               ),
               const SizedBox(width: 8),
               // Favorite Icon with StreamBuilder
@@ -229,38 +230,36 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "science_facts",
-                          backGroundImage:
-                          "lib/assets/images/science_background.jpg",
-                          appBarTitle: "Science facts",
-                        ),
+                              collectionName: "science_facts",
+                              backGroundImage:
+                                  "lib/assets/images/science_background.jpg",
+                              appBarTitle: "Science facts",
+                            ),
                       ),
                     );
-                  }else if (category['name'] == "Fun") {
+                  } else if (category['name'] == "Fun") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "fun_facts",
-                          backGroundImage:
-                          "lib/assets/images/smileemoji.jpg",
-                          appBarTitle: "Nature facts",
-                        ),
+                              collectionName: "fun_facts",
+                              backGroundImage:
+                                  "lib/assets/images/smileemoji.jpg",
+                              appBarTitle: "Nature facts",
+                            ),
                       ),
                     );
-                  }
-                  else if (category['name'] == "History") {
+                  } else if (category['name'] == "History") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "history_facts",
-                          backGroundImage:
-                          "lib/assets/images/history.jpg",
-                          appBarTitle: "History facts",
-                        ),
+                              collectionName: "history_facts",
+                              backGroundImage: "lib/assets/images/history.jpg",
+                              appBarTitle: "History facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Technology") {
@@ -269,11 +268,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "technology_facts",
-                          backGroundImage:
-                          "lib/assets/images/techonogy_background.jpg",
-                          appBarTitle: "Technology facts",
-                        ),
+                              collectionName: "technology_facts",
+                              backGroundImage:
+                                  "lib/assets/images/techonogy_background.jpg",
+                              appBarTitle: "Technology facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Nature") {
@@ -282,11 +281,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "nature_facts",
-                          backGroundImage:
-                          "lib/assets/images/nature_background.jpg",
-                          appBarTitle: "Nature facts",
-                        ),
+                              collectionName: "nature_facts",
+                              backGroundImage:
+                                  "lib/assets/images/nature_background.jpg",
+                              appBarTitle: "Nature facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Space") {
@@ -295,11 +294,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "space_facts",
-                          backGroundImage:
-                          "lib/assets/images/space_background.jpg",
-                          appBarTitle: "Space facts",
-                        ),
+                              collectionName: "space_facts",
+                              backGroundImage:
+                                  "lib/assets/images/space_background.jpg",
+                              appBarTitle: "Space facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Animals") {
@@ -308,11 +307,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "animals_facts",
-                          backGroundImage:
-                          "lib/assets/images/animal_background.jpg",
-                          appBarTitle: "Animal facts",
-                        ),
+                              collectionName: "animals_facts",
+                              backGroundImage:
+                                  "lib/assets/images/animal_background.jpg",
+                              appBarTitle: "Animal facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Sports") {
@@ -321,11 +320,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "sports_facts",
-                          backGroundImage:
-                          "lib/assets/images/sports_background.jpg",
-                          appBarTitle: "Sport facts",
-                        ),
+                              collectionName: "sports_facts",
+                              backGroundImage:
+                                  "lib/assets/images/sports_background.jpg",
+                              appBarTitle: "Sport facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Art") {
@@ -334,11 +333,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "art_facts",
-                          backGroundImage:
-                          "lib/assets/images/art_background.jpg",
-                          appBarTitle: "Art facts",
-                        ),
+                              collectionName: "art_facts",
+                              backGroundImage:
+                                  "lib/assets/images/art_background.jpg",
+                              appBarTitle: "Art facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Food") {
@@ -347,11 +346,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "food_facts",
-                          backGroundImage:
-                          "lib/assets/images/food_background.jpg",
-                          appBarTitle: "Food facts",
-                        ),
+                              collectionName: "food_facts",
+                              backGroundImage:
+                                  "lib/assets/images/food_background.jpg",
+                              appBarTitle: "Food facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Health") {
@@ -360,11 +359,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "health_facts",
-                          backGroundImage:
-                          "lib/assets/images/health_background.jpg",
-                          appBarTitle: "Health facts",
-                        ),
+                              collectionName: "health_facts",
+                              backGroundImage:
+                                  "lib/assets/images/health_background.jpg",
+                              appBarTitle: "Health facts",
+                            ),
                       ),
                     );
                   } else if (category['name'] == "Movies & TV") {
@@ -373,37 +372,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "movies_facts",
-                          backGroundImage:
-                          "lib/assets/images/movies_background.jpg",
-                          appBarTitle: "Movies & TV facts",
-                        ),
+                              collectionName: "movies_facts",
+                              backGroundImage:
+                                  "lib/assets/images/movies_background.jpg",
+                              appBarTitle: "Movies & TV facts",
+                            ),
                       ),
                     );
-                  }else if (category['name'] == "Psychology") {
+                  } else if (category['name'] == "Psychology") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "psychology_facts",
-                          backGroundImage:
-                          "lib/assets/images/psychology.jpg",
-                          appBarTitle: "Psychology facts",
-                        ),
+                              collectionName: "psychology_facts",
+                              backGroundImage:
+                                  "lib/assets/images/psychology.jpg",
+                              appBarTitle: "Psychology facts",
+                            ),
                       ),
                     );
-                  }else if (category['name'] == "Geography") {
+                  } else if (category['name'] == "Geography") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
                             (context) => CategoryFactsScreen(
-                          collectionName: "psychology_facts",
-                          backGroundImage:
-                          "lib/assets/images/geography.jpg",
-                          appBarTitle: "Psychology facts",
-                        ),
+                              collectionName: "psychology_facts",
+                              backGroundImage:
+                                  "lib/assets/images/geography.jpg",
+                              appBarTitle: "Psychology facts",
+                            ),
                       ),
                     );
                   }
@@ -421,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String name,
     required Color color,
     required Size size,
-    required VoidCallback onTap
+    required VoidCallback onTap,
   }) {
     return Column(
       children: [
@@ -458,12 +457,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Spacer(),
             InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (_)=>TrendingScreen()));
-                },
-                child: Text('See All', style: myTextStyle14(textColor: AppColors.primary))),
-
-
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => TrendingScreen()),
+                );
+              },
+              child: Text(
+                'See All',
+                style: myTextStyle14(textColor: AppColors.primary),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 12),

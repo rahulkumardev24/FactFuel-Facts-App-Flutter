@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/helper/fact_utils.dart';
 import 'package:flutter/material.dart';
 import '../../helper/colors.dart';
 import '../../helper/custom_text_style.dart';
-import '../../widgets/saved_fact_card.dart';
 import '../../widgets/trending_fact_card.dart';
 
 class TrendingScreen extends StatefulWidget {

@@ -23,22 +23,31 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _navigateAfterDelay();
+  }
 
-    Future.delayed(Duration(seconds: 2), () {
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  Future<void> _navigateAfterDelay() async {
+    await Future.delayed(const Duration(seconds: 2));
+    
+    if (!mounted) return;
+    
+    // Cache the navigator to avoid using context after async gap
+    final navigator = Navigator.of(context);
+    
+    // Set system UI mode
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-      if (FirebaseAuth.instance.currentUser != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => DashboardScreen()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => LoginScreen()),
-        );
-      }
-    });
+    // Navigate based on auth state
+    final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    if (isLoggedIn) {
+      navigator.pushReplacement(
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+      );
+    } else {
+      navigator.pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    }
   }
 
   @override

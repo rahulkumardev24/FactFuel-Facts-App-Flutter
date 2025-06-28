@@ -84,7 +84,14 @@ class CategoriesFactCard extends StatelessWidget {
                   MyIconButton(
                     icon: Icons.copy_rounded,
                     iconColor: AppColors.iconSecondary,
-                    onTap: () => FactUtils.copyToClipboard(context, fact),
+                    onTap: () async {
+                      await FactUtils.copyToClipboard(fact);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Copied to clipboard')),
+                        );
+                      }
+                    },
                   ),
 
                   MyIconButton(

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/helper/fact_utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../helper/custom_text_style.dart';
 import '../helper/colors.dart';
+import '../helper/custom_text_style.dart';
 import '../widgets/saved_fact_card.dart';
 
 class SavedScreen extends StatefulWidget {

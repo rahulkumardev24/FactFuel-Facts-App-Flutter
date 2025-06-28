@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../helper/colors.dart';
 
 
+@immutable
 class MyIconButton extends StatelessWidget {
-  IconData icon;
-  Color? iconColor;
-  double iconSize;
-  VoidCallback onTap;
-  MyIconButton({
+  final IconData icon;
+  final Color? iconColor;
+  final double iconSize;
+  final VoidCallback onTap;
+  
+  const MyIconButton({
     super.key,
     required this.icon,
     this.iconColor = AppColors.iconDark,

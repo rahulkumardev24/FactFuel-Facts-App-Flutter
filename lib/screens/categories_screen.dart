@@ -38,10 +38,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   Future<void> loadFactCounts() async {
-    final counts = await FactUtils.fetchFactCounts();
-    setState(() {
-      _factCounts = counts;
-    });
+    try {
+      final counts = await FactUtils.fetchFactCounts();
+      if (mounted) {
+        setState(() {
+          _factCounts = counts;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        // Handle error if needed
+        debugPrint('Error loading fact counts: $e');
+      }
+    }
   }
 
 
@@ -324,6 +333,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    // Cancel any pending async operations
     super.dispose();
   }
 }

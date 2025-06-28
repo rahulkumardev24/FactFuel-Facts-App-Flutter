@@ -23,9 +23,9 @@ class CategoryCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withAlpha(25), // ~10% opacity
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withAlpha(51)), // ~20% opacity
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +33,7 @@ class CategoryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withAlpha(51), // ~20% opacity
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, size: 28, color: color),

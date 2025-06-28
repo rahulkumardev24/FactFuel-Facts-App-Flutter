@@ -7,11 +7,13 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import '../../helper/colors.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+  
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final AuthService _authService = AuthService();
   late AnimationController _animationController;
@@ -51,20 +53,25 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   void dispose() {
+    _animationController.stop();
     _animationController.dispose();
     super.dispose();
   }
 
   Future<void> loginWithGoogle() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
 
     try {
       final user = await _authService.signInWithGoogle();
+      if (!mounted) return;
+      
       if (user != null) {
-        Navigator.pushReplacement(
-          context,
+        // Store navigation in a variable to avoid using context after async gap
+        final navigator = Navigator.of(context);
+        navigator.pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (_, __, ___) => DashboardScreen(),
+            pageBuilder: (_, __, ___) => const DashboardScreen(),
             transitionsBuilder: (_, animation, __, child) {
               return FadeTransition(opacity: animation, child: child);
             },
@@ -74,7 +81,9 @@ class _LoginScreenState extends State<LoginScreen>
         _showErrorSnackBar("Login failed. Please try again.");
       }
     } catch (e) {
-      _showErrorSnackBar("An error occurred: ${e.toString()}");
+      if (mounted) {
+        _showErrorSnackBar("An error occurred: ${e.toString()}");
+      }
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -100,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Stack(
           children: [
@@ -195,9 +204,7 @@ class _LoginScreenState extends State<LoginScreen>
                             color:
                                 _currentFactIndex == index
                                     ? theme.colorScheme.primary
-                                    : theme.colorScheme.secondary.withOpacity(
-                                      0.3,
-                                    ),
+                                    : theme.colorScheme.onSurface.withAlpha(128), // 50% opacity
                           ),
                         ),
                       ),
@@ -228,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen>
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: const Color.fromRGBO(0, 0, 0, 0.1),
                               blurRadius: 10,
                               offset: Offset(0, 4),
                             ),
@@ -332,14 +339,14 @@ class _LoginScreenState extends State<LoginScreen>
                   textAlign: TextAlign.center,
                   style: myTextStyle18(
                     fontWeight: FontWeight.w600,
-                    textColor: theme.colorScheme.onBackground,
+                    textColor: theme.colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(height: 16),
                 Text(
                   "Did you know?",
                   style: TextStyle(
-                    color: theme.colorScheme.secondary,
+                    color: theme.colorScheme.surface,
                     fontStyle: FontStyle.italic,
                   ),
                 ),

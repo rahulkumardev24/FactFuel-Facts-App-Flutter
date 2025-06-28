@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,7 +36,6 @@ class AuthService {
       if (user != null) {
         final userDoc = _firestore.collection('users').doc(user.uid);
         final docSnapshot = await userDoc.get();
-        final time = DateTime.now().millisecondsSinceEpoch.toString();
 
         /// If the user doesn't exist, create a new user document
         if (!docSnapshot.exists) {
@@ -54,7 +55,7 @@ class AuthService {
       }
       return null;
     } catch (error) {
-      print("Google Sign-in failed: $error");
+      log("Google Sign-in failed: $error", name: 'AuthService');
       return null;
     }
   }

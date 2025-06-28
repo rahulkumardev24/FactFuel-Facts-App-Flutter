@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import '../helper/colors.dart';
 
 class TrendingFactCard extends StatelessWidget {
-  String fact;
-  String likes;
-  TrendingFactCard({super.key, required this.fact, required this.likes});
+  final String fact;
+  final String likes;
+
+  const TrendingFactCard({super.key, required this.fact, required this.likes});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,14 @@ class TrendingFactCard extends StatelessWidget {
                   MyIconButton(
                     icon: Icons.copy_rounded,
                     iconColor: AppColors.iconSecondary,
-                    onTap: () => FactUtils.copyToClipboard(context, fact),
+                    onTap: () async {
+                      await FactUtils.copyToClipboard(fact);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Copied to clipboard')),
+                        );
+                      }
+                    },
                   ),
                   SizedBox(width: 8),
 

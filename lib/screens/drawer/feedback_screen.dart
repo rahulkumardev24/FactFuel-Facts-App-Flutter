@@ -1,7 +1,6 @@
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:fact_fuel/helper/my_dialogs.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:glass_kit/glass_kit.dart';
 import '../../helper/colors.dart';
@@ -36,29 +35,52 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       setState(() => _isSubmitting = true);
       try {
         // Using FactUtils to submit feedback
-        await FactUtils.submitFeedback(
+        final success = await FactUtils.submitFeedback(
           message: _feedbackController.text.trim(),
           rating: _rating,
           category: _selectedCategory,
-          context: context,
         );
 
-        /// Success state update
-        setState(() {
-          _feedbackSent = true;
-          _feedbackController.clear();
-          _rating = 0;
-          _selectedCategory = null;
-        });
-      } on FirebaseException catch (e) {
-        MyDialogs.myShowSnackBar(
-          context,
-          " Error : ${e.message}",
-          AppColors.error,
-          AppColors.textPrimary,
-        );
+        if (mounted) {
+          if (success) {
+            // Success state update
+            setState(() {
+              _feedbackSent = true;
+              _feedbackController.clear();
+              _rating = 0;
+              _selectedCategory = null;
+            });
+            
+            // Show success message
+            MyDialogs.myShowSnackBar(
+              context,
+              "Thank you for your feedback!",
+              Colors.green,
+              Colors.white,
+            );
+          } else {
+            // Show error message
+            MyDialogs.myShowSnackBar(
+              context,
+              "Failed to submit feedback. Please try again.",
+              AppColors.error,
+              AppColors.textPrimary,
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          MyDialogs.myShowSnackBar(
+            context,
+            "An error occurred: ${e.toString()}",
+            AppColors.error,
+            AppColors.textPrimary,
+          );
+        }
       } finally {
-        setState(() => _isSubmitting = false);
+        if (mounted) {
+          setState(() => _isSubmitting = false);
+        }
       }
     }
   }

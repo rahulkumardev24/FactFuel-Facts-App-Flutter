@@ -1,6 +1,5 @@
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:fact_fuel/helper/fact_utils.dart';
-import 'package:fact_fuel/helper/my_dialogs.dart';
 import 'package:fact_fuel/screens/drawer/about_developer_screen.dart';
 import 'package:fact_fuel/screens/drawer/feedback_screen.dart';
 import 'package:fact_fuel/screens/drawer/trending_screen.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../helper/colors.dart';
 import '../service/auth_service.dart';
-import 'custom_drawer.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -28,18 +26,36 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   List<DrawerItem> _drawerItems(BuildContext context) {
+    final navigator = Navigator.of(context);
+
     return [
-      DrawerItem(icon: FontAwesomeIcons.bolt, title: "Trending", onTap: () {
-        Navigator.pop(context) ;
-        Navigator.push(context, MaterialPageRoute(builder: (_)=> TrendingScreen()));
-      }),
+      DrawerItem(
+        icon: FontAwesomeIcons.house,
+        title: "Home",
+        onTap: () {
+          navigator.pop();
+        },
+      ),
 
       DrawerItem(
-        icon: FontAwesomeIcons.shareFromSquare,
-        title: "Share App",
+        icon: FontAwesomeIcons.arrowTrendUp,
+        title: "Trending",
         onTap: () {
-          Navigator.pop(context);
-          MyDialogs.shareApp(context);
+          navigator.pop();
+          navigator.push(
+            MaterialPageRoute(builder: (_) => const TrendingScreen()),
+          );
+        },
+      ),
+
+      DrawerItem(
+        icon: FontAwesomeIcons.solidMessage,
+        title: "Feedback",
+        onTap: () {
+          navigator.pop();
+          navigator.push(
+            MaterialPageRoute(builder: (_) => const FeedbackScreen()),
+          );
         },
       ),
 
@@ -47,21 +63,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
         icon: FontAwesomeIcons.userAstronaut,
         title: "About Developer",
         onTap: () {
-          Navigator.pop(context);
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => AboutDeveloperScreen()),
+          navigator.pop();
+          navigator.push(
+            MaterialPageRoute(builder: (_) => const AboutDeveloperScreen()),
           );
-        },
-      ),
-
-      DrawerItem(
-        icon: FontAwesomeIcons.comments,
-        title: "Feedback",
-        onTap: () {
-          Navigator.pop(context) ;
-          Navigator.push(context, MaterialPageRoute(builder: (_)=> FeedbackScreen()));
         },
       ),
 
@@ -70,10 +75,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
         title: "Logout",
         onTap: () async {
           await AuthService().signOut();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => LoginScreen()),
-          );
+          if (context.mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          }
         },
       ),
     ];
@@ -84,56 +90,46 @@ class _CustomDrawerState extends State<CustomDrawer> {
     final size = MediaQuery.of(context).size;
     final drawerItems = _drawerItems(context);
 
-    return Animate(
-      effects: [
-        SlideEffect(
-          duration: 1000.ms,
-          begin: const Offset(-1, 0),
-          end: Offset.zero,
-          curve: Curves.easeOutCubic,
-        ),
-      ],
-      child: Drawer(
-        width: size.width * 0.6,
-        elevation: 10,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.primaryDark.withValues(alpha: 0.9),
-                AppColors.primary.withValues(alpha: 0.7),
-              ],
-            ),
-          ),
-          child: Column(
-            children: [
-              /// Header Section
-              _buildHeader(size),
-
-              /// Main Menu Items
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-
-                  itemCount: drawerItems.length,
-                  itemBuilder: (context, index) {
-                    return _buildDrawerItem(
-                      item: drawerItems[index],
-                      index: index,
-                    );
-                  },
-                ),
-              ),
-
-              /// Footer
-              _buildFooter(),
+    return Drawer(
+      width: size.width * 0.6,
+      elevation: 10,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.primaryDark.withValues(alpha: 0.9),
+              AppColors.primary.withValues(alpha: 0.7),
             ],
           ),
+        ),
+        child: Column(
+          children: [
+            /// Header Section
+            _buildHeader(size),
+
+            /// Main Menu Items
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+
+                itemCount: drawerItems.length,
+                itemBuilder: (context, index) {
+                  return _buildDrawerItem(
+                    item: drawerItems[index],
+                    index: index,
+                  );
+                },
+              ),
+            ),
+
+            /// Footer
+            _buildFooter(),
+          ],
         ),
       ),
     );
@@ -159,6 +155,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   right: 10,
                   child: MyIconButton(
                     icon: FontAwesomeIcons.xmark,
+                    iconSize: 27,
                     onTap: () => Navigator.pop(context),
                   ),
                 ),
@@ -188,9 +185,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       const SizedBox(height: 10),
                       Text(
                         userData['userName'],
-                        style: myTextStyle18(
-                          textColor: AppColors.textSecondary,
-                        ),
+                        style: myTextStyle18(textColor: AppColors.textPrimary),
                       ),
                       Text(
                         userData['email'],

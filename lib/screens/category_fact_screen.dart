@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../helper/colors.dart';
 import '../widgets/categories_fact_card.dart';
 
 class CategoryFactsScreen extends StatefulWidget {
-  String collectionName;
-  String backGroundImage;
-  String appBarTitle;
-  CategoryFactsScreen({
+  final String collectionName;
+  final String backGroundImage;
+  final String appBarTitle;
+  
+  const CategoryFactsScreen({
     super.key,
     required this.collectionName,
     required this.backGroundImage,
