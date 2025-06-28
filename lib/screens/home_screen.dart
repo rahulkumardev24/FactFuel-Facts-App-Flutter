@@ -60,7 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
         drawer: CustomDrawer(),
         onDrawerChanged: (isOpen) {
-          widget.onDrawerChanged?.call(isOpen);
+          if (mounted) {
+            widget.onDrawerChanged?.call(isOpen);
+          }
         },
         body: SingleChildScrollView(
           child: Column(

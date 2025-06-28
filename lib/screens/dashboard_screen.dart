@@ -15,7 +15,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen>
+    with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController(initialPage: 0);
   final NotchBottomBarController _controller = NotchBottomBarController(
     index: 0,
@@ -26,6 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -50,6 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: AppColors.background,
         extendBody: true,
         body: SafeArea(
+          maintainBottomViewPadding: true,
           child: PageView(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
@@ -134,7 +137,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                     onTap: (index) {
-                      _pageController.jumpToPage(index);
+                      if (mounted) {
+                        _pageController.jumpToPage(index);
+                      }
                     },
                   ),
                 ),
