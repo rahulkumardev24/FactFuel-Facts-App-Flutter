@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../helper/colors.dart';
+import '../helper/fact_utils.dart';
 import '../widgets/categories_card.dart';
 import 'category_fact_screen.dart';
 
@@ -28,6 +29,22 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }).toList();
   }
 
+  Map<String, int> _factCounts = {};
+
+  @override
+  void initState() {
+    super.initState();
+    loadFactCounts();
+  }
+
+  Future<void> loadFactCounts() async {
+    final counts = await FactUtils.fetchFactCounts();
+    setState(() {
+      _factCounts = counts;
+    });
+  }
+
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -41,20 +58,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return Scaffold(
       backgroundColor: AppColors.background,
 
       /// app bar
       appBar: AppBar(
-        title: Text('Categories', style: myTextStyle18()),
+        title: Text(
+          'Categories',
+          style: myTextStyle21(textColor: AppColors.textPrimary),
+        ),
         backgroundColor: AppColors.primary,
         elevation: 0,
       ),
@@ -74,9 +88,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               },
               decoration: InputDecoration(
                 hintText: 'Search categories...',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: AppColors.textSecondary,
+                ),
+                hintStyle: myTextStyle14(textColor: AppColors.textSecondary),
                 filled: true,
-                fillColor: AppColors.surface,
+
+                fillColor: AppColors.primaryLight.withValues(alpha: 0.15),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -104,7 +123,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     name: category['name'],
                     icon: category['icon'],
                     color: category['color'],
-                    factCount: category['factCount'],
+                    factCount: _factCounts[category['name']] ?? 0 ,
                     onTap: () {
                       /// Navigate to category facts screen
                       if (category['name'] == "Science") {
@@ -120,7 +139,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ),
                           ),
                         );
-                      } else if (category['name'] == "History") {
+                      }else if (category['name'] == "Fun") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "fun_facts",
+                              backGroundImage:
+                              "lib/assets/images/smileemoji.jpg",
+                              appBarTitle: "Nature facts",
+                            ),
+                          ),
+                        );
+                      }
+                      else if (category['name'] == "History") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -146,104 +179,136 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ),
                           ),
                         );
-                      }else if(category['name'] == "Nature"){
+                      } else if (category['name'] == "Nature") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => CategoryFactsScreen(
-                              collectionName: "nature_facts",
-                              backGroundImage:
-                              "lib/assets/images/nature_background.jpg",
-                              appBarTitle: "Nature facts",
-                            ),
+                                  collectionName: "nature_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/nature_background.jpg",
+                                  appBarTitle: "Nature facts",
+                                ),
                           ),
                         );
-
-                      }else if(category['name'] == "Space"){
+                      } else if (category['name'] == "Space") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => CategoryFactsScreen(
-                              collectionName: "space_facts",
-                              backGroundImage:
-                              "lib/assets/images/space_background.jpg",
-                              appBarTitle: "Space facts",
-                            ),
+                                  collectionName: "space_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/space_background.jpg",
+                                  appBarTitle: "Space facts",
+                                ),
                           ),
                         );
-
-                      }else if(category['name'] == "Animals"){
+                      } else if (category['name'] == "Animals") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => CategoryFactsScreen(
-                              collectionName: "animals_facts",
-                              backGroundImage:
-                              "lib/assets/images/animal_background.jpg",
-                              appBarTitle: "Animal facts",
-                            ),
+                                  collectionName: "animals_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/animal_background.jpg",
+                                  appBarTitle: "Animal facts",
+                                ),
                           ),
                         );
-
-                      }else if(category['name'] == "Sports"){
+                      } else if (category['name'] == "Sports") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => CategoryFactsScreen(
-                              collectionName: "sports_facts",
-                              backGroundImage:
-                              "lib/assets/images/sports_background.jpg",
-                              appBarTitle: "Sport facts",
-                            ),
+                                  collectionName: "sports_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/sports_background.jpg",
+                                  appBarTitle: "Sport facts",
+                                ),
                           ),
                         );
-
-                      }else if(category['name'] == "Art"){
+                      } else if (category['name'] == "Art") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => CategoryFactsScreen(
-                              collectionName: "art_facts",
-                              backGroundImage:
-                              "lib/assets/images/art_background.jpg",
-                              appBarTitle: "Art facts",
-                            ),
+                                  collectionName: "art_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/art_background.jpg",
+                                  appBarTitle: "Art facts",
+                                ),
                           ),
                         );
-
-                      }else if(category['name'] == "Food"){
+                      } else if (category['name'] == "Food") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => CategoryFactsScreen(
-                              collectionName: "food_facts",
-                              backGroundImage:
-                              "lib/assets/images/food_background.jpg",
-                              appBarTitle: "Food facts",
-                            ),
+                                  collectionName: "food_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/food_background.jpg",
+                                  appBarTitle: "Food facts",
+                                ),
                           ),
                         );
-
-                      }else if(category['name'] == "Health"){
+                      } else if (category['name'] == "Health") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (context) => CategoryFactsScreen(
-                              collectionName: "health_facts",
+                                  collectionName: "health_facts",
+                                  backGroundImage:
+                                      "lib/assets/images/health_background.jpg",
+                                  appBarTitle: "Health facts",
+                                ),
+                          ),
+                        );
+                      } else if (category['name'] == "Movies & TV") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "movies_facts",
                               backGroundImage:
-                              "lib/assets/images/health_background.jpg",
-                              appBarTitle: "Health facts",
+                              "lib/assets/images/movies_background.jpg",
+                              appBarTitle: "Movies & TV facts",
                             ),
                           ),
                         );
-
+                      }else if (category['name'] == "Psychology") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "psychology_facts",
+                              backGroundImage:
+                              "lib/assets/images/psychology.jpg",
+                              appBarTitle: "Psychology facts",
+                            ),
+                          ),
+                        );
+                      }else if (category['name'] == "Geography") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "psychology_facts",
+                              backGroundImage:
+                              "lib/assets/images/geography.jpg",
+                              appBarTitle: "Psychology facts",
+                            ),
+                          ),
+                        );
                       }
                     },
                   );

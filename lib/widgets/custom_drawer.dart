@@ -3,6 +3,7 @@ import 'package:fact_fuel/helper/fact_utils.dart';
 import 'package:fact_fuel/helper/my_dialogs.dart';
 import 'package:fact_fuel/screens/drawer/about_developer_screen.dart';
 import 'package:fact_fuel/screens/drawer/feedback_screen.dart';
+import 'package:fact_fuel/screens/drawer/trending_screen.dart';
 import 'package:fact_fuel/screens/starting/login_screen.dart';
 import 'package:fact_fuel/widgets/my_icon_button.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   List<DrawerItem> _drawerItems(BuildContext context) {
     return [
-      DrawerItem(icon: FontAwesomeIcons.bolt, title: "Trending", onTap: () {}),
+      DrawerItem(icon: FontAwesomeIcons.bolt, title: "Trending", onTap: () {
+        Navigator.pop(context) ;
+        Navigator.push(context, MaterialPageRoute(builder: (_)=> TrendingScreen()));
+      }),
 
       DrawerItem(
         icon: FontAwesomeIcons.shareFromSquare,

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'app_constant.dart';
+
 class FactUtils {
   static Future<void> copyToClipboard(BuildContext context, String text) async {
     await Clipboard.setData(ClipboardData(text: text));
@@ -60,55 +62,6 @@ class FactUtils {
     }
   }
 
-  /*
-  static Future<void> toggleFavorite(String fact, bool isSaved) async {
-    try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
-      final docId = fact.hashCode.toString();
-
-      final userFavRef = FirebaseFirestore.instance
-          .collection("users")
-          .doc(uid)
-          .collection("favorites")
-          .doc(docId);
-
-      final likesRef = FirebaseFirestore.instance
-          .collection("likes")
-          .doc(docId);
-
-      if (isSaved) {
-        /// UNLIKE: Remove from favorites and update global likes count
-        await userFavRef.delete();
-
-        await likesRef.update({
-          'count': FieldValue.increment(-1),
-          'likedBy.$uid': FieldValue.delete(),
-        });
-      } else {
-        /// LIKE: Save to favorites and update global likes count
-        await userFavRef.set({'fact': fact});
-
-        final snap = await likesRef.get();
-
-        if (!snap.exists) {
-          await likesRef.set({
-            'fact': fact,
-            'count': 1,
-            'likedBy': {uid: true},
-          });
-        } else {
-          await likesRef.update({
-            'count': FieldValue.increment(1),
-            'likedBy.$uid': true,
-          });
-        }
-      }
-    } catch (e) {
-      print("Error in toggleFavorite: $e");
-    }
-  }
-*/
-
   static Stream<DocumentSnapshot> favoriteStatusStream(String fact) {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -123,6 +76,16 @@ class FactUtils {
         .doc(uid)
         .collection("favorites")
         .doc(docId)
+        .snapshots();
+  }
+
+  /// get favorites
+  static Stream<QuerySnapshot> getSavedFacts() {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .collection("favorites")
         .snapshots();
   }
 
@@ -241,4 +204,23 @@ class FactUtils {
       }
     }
   }
+
+  static Future<Map<String, int>> fetchFactCounts() async {
+    Map<String, int> counts = {};
+
+    for (var category in AppConstant.categories) {
+      final collectionName = category['collection'];
+      final name = category['name'];
+
+      if (collectionName != null && name != null) {
+        final snapshot = await FirebaseFirestore.instance
+            .collection(collectionName)
+            .get();
+
+        counts[name] = snapshot.size;
+      }
+    }
+    return counts;
+  }
+
 }

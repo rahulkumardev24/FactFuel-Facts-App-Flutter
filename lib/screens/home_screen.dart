@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/helper/app_constant.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:fact_fuel/helper/fact_utils.dart';
+import 'package:fact_fuel/screens/drawer/trending_screen.dart';
 import 'package:fact_fuel/widgets/my_icon_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import '../helper/colors.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/trending_fact_card.dart';
+import 'category_fact_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(bool)? onDrawerChanged;
@@ -217,6 +219,193 @@ class _HomeScreenState extends State<HomeScreen> {
                 name: category['name'],
                 color: category['color'],
                 size: size,
+                onTap: () {
+                  /// Navigate to category facts screen
+                  if (category['name'] == "Science") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "science_facts",
+                          backGroundImage:
+                          "lib/assets/images/science_background.jpg",
+                          appBarTitle: "Science facts",
+                        ),
+                      ),
+                    );
+                  }else if (category['name'] == "Fun") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "fun_facts",
+                          backGroundImage:
+                          "lib/assets/images/smileemoji.jpg",
+                          appBarTitle: "Nature facts",
+                        ),
+                      ),
+                    );
+                  }
+                  else if (category['name'] == "History") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "history_facts",
+                          backGroundImage:
+                          "lib/assets/images/history.jpg",
+                          appBarTitle: "History facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Technology") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "technology_facts",
+                          backGroundImage:
+                          "lib/assets/images/techonogy_background.jpg",
+                          appBarTitle: "Technology facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Nature") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "nature_facts",
+                          backGroundImage:
+                          "lib/assets/images/nature_background.jpg",
+                          appBarTitle: "Nature facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Space") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "space_facts",
+                          backGroundImage:
+                          "lib/assets/images/space_background.jpg",
+                          appBarTitle: "Space facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Animals") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "animals_facts",
+                          backGroundImage:
+                          "lib/assets/images/animal_background.jpg",
+                          appBarTitle: "Animal facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Sports") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "sports_facts",
+                          backGroundImage:
+                          "lib/assets/images/sports_background.jpg",
+                          appBarTitle: "Sport facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Art") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "art_facts",
+                          backGroundImage:
+                          "lib/assets/images/art_background.jpg",
+                          appBarTitle: "Art facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Food") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "food_facts",
+                          backGroundImage:
+                          "lib/assets/images/food_background.jpg",
+                          appBarTitle: "Food facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Health") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "health_facts",
+                          backGroundImage:
+                          "lib/assets/images/health_background.jpg",
+                          appBarTitle: "Health facts",
+                        ),
+                      ),
+                    );
+                  } else if (category['name'] == "Movies & TV") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "movies_facts",
+                          backGroundImage:
+                          "lib/assets/images/movies_background.jpg",
+                          appBarTitle: "Movies & TV facts",
+                        ),
+                      ),
+                    );
+                  }else if (category['name'] == "Psychology") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "psychology_facts",
+                          backGroundImage:
+                          "lib/assets/images/psychology.jpg",
+                          appBarTitle: "Psychology facts",
+                        ),
+                      ),
+                    );
+                  }else if (category['name'] == "Geography") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CategoryFactsScreen(
+                          collectionName: "psychology_facts",
+                          backGroundImage:
+                          "lib/assets/images/geography.jpg",
+                          appBarTitle: "Psychology facts",
+                        ),
+                      ),
+                    );
+                  }
+                },
               );
             },
           ),
@@ -230,18 +419,22 @@ class _HomeScreenState extends State<HomeScreen> {
     required String name,
     required Color color,
     required Size size,
+    required VoidCallback onTap
   }) {
     return Column(
       children: [
-        Container(
-          width: size.height * 0.07,
-          height: size.height * 0.06,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withValues(alpha: 0.3)),
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: size.height * 0.07,
+            height: size.height * 0.06,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
+            ),
+            child: Icon(icon, color: color, size: 28),
           ),
-          child: Icon(icon, color: color, size: 28),
         ),
         const SizedBox(height: 8),
         Text(name, style: myTextStyle12(textColor: AppColors.textSecondary)),
@@ -262,6 +455,13 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text('Trending Now', style: myTextStyle18()),
             ),
             const Spacer(),
+            InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (_)=>TrendingScreen()));
+                },
+                child: Text('See All', style: myTextStyle14(textColor: AppColors.primary))),
+
+
           ],
         ),
         const SizedBox(height: 12),
