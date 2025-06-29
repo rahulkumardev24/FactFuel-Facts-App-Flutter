@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fact_fuel/helper/app_constant.dart';
 import 'package:fact_fuel/helper/custom_text_style.dart';
 import 'package:fact_fuel/helper/fact_utils.dart';
+import 'package:fact_fuel/helper/my_dialogs.dart';
 import 'package:fact_fuel/screens/drawer/trending_screen.dart';
 import 'package:fact_fuel/widgets/my_icon_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -161,11 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
               MyIconButton(
                 icon: Icons.copy_rounded,
                 onTap: () {
-                  final scaffoldMessenger = ScaffoldMessenger.of(context);
                   FactUtils.copyToClipboard(fact).then((_) {
-                    scaffoldMessenger.showSnackBar(
-                      const SnackBar(content: Text('Copied to clipboard')),
-                    );
+                   MyDialogs.myShowSnackBar(context, "Copied to clipboard", AppColors.success, AppColors.textPrimary);
                   });
                 },
               ),
@@ -186,7 +184,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               const SizedBox(width: 8),
-              MyIconButton(icon: Icons.share_rounded, onTap: () {}),
+              MyIconButton(
+                icon: Icons.share_rounded,
+                onTap: () {
+                  FactUtils.shareFact(context, fact);
+                },
+              ),
             ],
           ),
           const SizedBox(height: 16),

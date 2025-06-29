@@ -5,7 +5,10 @@ import 'colors.dart';
 import 'custom_text_style.dart';
 
 class _DialogUtils {
-  static Future<void> _showThankYouDialog(BuildContext context, Size mqData) async {
+  static Future<void> _showThankYouDialog(
+    BuildContext context,
+    Size mqData,
+  ) async {
     return showDialog<void>(
       context: context,
       barrierColor: Colors.black26,
@@ -97,8 +100,10 @@ class MyDialogs {
   static Future<void> shareApp(BuildContext context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final mqData = MediaQuery.of(context).size;
-    const String playStoreLink = "https://drive.google.com/file/d/your_apk_file_id/view?usp=sharing";
-    const String shareText = '🔥 Discover mind-blowing facts daily with the *FactFuel* app! Download now :\n$playStoreLink';
+    const String playStoreLink =
+        "https://drive.google.com/file/d/your_apk_file_id/view?usp=sharing";
+    const String shareText =
+        '🔥 Discover mind-blowing facts daily with the *FactFuel* app! Download now :\n$playStoreLink';
 
     try {
       final result = await SharePlus.instance.share(
@@ -109,7 +114,7 @@ class MyDialogs {
       );
 
       if (!context.mounted) return;
-      
+
       if (result.status == ShareResultStatus.success) {
         // Show impressive thank you animation in a separate function
         await _DialogUtils._showThankYouDialog(context, mqData);
@@ -134,6 +139,12 @@ class MyDialogs {
       SnackBar(
         content: Text(title, style: myTextStyle18(textColor: textColor)),
         backgroundColor: backgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(16),
+            topLeft: Radius.circular(16),
+          ),
+        ),
       ),
     );
   }
@@ -149,13 +160,12 @@ class MyDialogs {
     );
   }
 
-  static Widget myCircularProgressIndicator(){
-   return  SizedBox(
-     child: CircularProgressIndicator(
-       strokeWidth: 8,
-       color: AppColors.primaryLight,
-     ),
-   );
+  static Widget myCircularProgressIndicator() {
+    return SizedBox(
+      child: CircularProgressIndicator(
+        strokeWidth: 8,
+        color: AppColors.primaryLight,
+      ),
+    );
   }
-
 }

@@ -5,6 +5,7 @@ import 'package:fact_fuel/widgets/my_icon_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../helper/colors.dart';
+import '../helper/my_dialogs.dart';
 
 class TrendingFactCard extends StatelessWidget {
   final String fact;
@@ -40,20 +41,24 @@ class TrendingFactCard extends StatelessWidget {
                   MyIconButton(
                     icon: Icons.copy_rounded,
                     iconColor: AppColors.iconSecondary,
-                    onTap: () async {
-                      await FactUtils.copyToClipboard(fact);
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Copied to clipboard')),
+                    onTap: () {
+                      FactUtils.copyToClipboard(fact).then((_) {
+                        MyDialogs.myShowSnackBar(
+                          context,
+                          "Copied to clipboard",
+                          AppColors.success,
+                          AppColors.textPrimary,
                         );
-                      }
+                      });
                     },
                   ),
                   SizedBox(width: 8),
 
                   MyIconButton(
                     icon: Icons.share_rounded,
-                    onTap: () {},
+                    onTap: () {
+                      FactUtils.shareFact(context, fact);
+                    },
                     iconColor: AppColors.iconSecondary,
                   ),
 

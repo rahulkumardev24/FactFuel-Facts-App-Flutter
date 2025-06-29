@@ -22,14 +22,20 @@ class FactUtils {
 
   static void shareFact(BuildContext context, String factText) async {
     try {
-      final message = "🔥 Did you know?\n\n$factText\n\nDownload FactFuel now and explore more amazing facts!";
-      await Share.share(message);
+      const appLink =
+          "https://play.google.com/store/apps/details?id=com.yourcompany.factfuel";
+      final message =
+          "🔥 Did you know?\n\n$factText\n\nExplore more amazing facts on FactFuel!\nDownload now: $appLink";
+      await SharePlus.instance.share(ShareParams(text: message));
     } catch (e) {
-      MyDialogs.myShowSnackBar(context, "Error sharing fact", AppColors.error, AppColors.textPrimary);
+      MyDialogs.myShowSnackBar(
+        context,
+        "Error sharing fact",
+        AppColors.error,
+        AppColors.textPrimary,
+      );
     }
   }
-
-
 
   static Future<void> toggleFavorite(String fact, bool isSaved) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -73,7 +79,7 @@ class FactUtils {
         }
       }
     } catch (e) {
-        // Error toggling favorite
+      // Error toggling favorite
     }
   }
 
@@ -156,7 +162,7 @@ class FactUtils {
         return null;
       }
     } catch (e) {
-        // Error fetching user data
+      // Error fetching user data
       throw Exception(e);
     }
   }
@@ -174,10 +180,10 @@ class FactUtils {
       final deviceData = await deviceInfo.deviceInfo;
       final packageInfo = await PackageInfo.fromPlatform();
 
-      // Get current user data if available
+      /// Get current user data if available
       final user = FirebaseAuth.instance.currentUser;
 
-      // Prepare feedback data
+      /// Prepare feedback data
       final feedbackData = {
         'message': message,
         'rating': rating,
@@ -212,14 +218,12 @@ class FactUtils {
       final name = category['name'];
 
       if (collectionName != null && name != null) {
-        final snapshot = await FirebaseFirestore.instance
-            .collection(collectionName)
-            .get();
+        final snapshot =
+            await FirebaseFirestore.instance.collection(collectionName).get();
 
         counts[name] = snapshot.size;
       }
     }
     return counts;
   }
-
 }

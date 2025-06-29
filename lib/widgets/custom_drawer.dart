@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../helper/colors.dart';
+import '../helper/my_dialogs.dart';
 import '../service/auth_service.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -36,7 +37,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
           navigator.pop();
         },
       ),
-
       DrawerItem(
         icon: FontAwesomeIcons.arrowTrendUp,
         title: "Trending",
@@ -49,7 +49,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       ),
 
       DrawerItem(
-        icon: FontAwesomeIcons.solidMessage,
+        icon: FontAwesomeIcons.comments,
         title: "Feedback",
         onTap: () {
           navigator.pop();
@@ -67,6 +67,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
           navigator.push(
             MaterialPageRoute(builder: (_) => const AboutDeveloperScreen()),
           );
+        },
+      ),
+
+      DrawerItem(
+        icon: FontAwesomeIcons.shareFromSquare,
+        title: "Share App",
+        onTap: () {
+          Navigator.pop(context);
+          MyDialogs.shareApp(context);
         },
       ),
 

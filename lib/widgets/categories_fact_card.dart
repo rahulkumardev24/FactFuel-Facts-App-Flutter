@@ -6,10 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:glass_kit/glass_kit.dart';
 import '../helper/custom_text_style.dart';
 import '../helper/fact_utils.dart';
+import '../helper/my_dialogs.dart';
 
 class CategoriesFactCard extends StatefulWidget {
   final String fact;
-
   const CategoriesFactCard({super.key, required this.fact});
 
   @override
@@ -94,13 +94,15 @@ class _CategoriesFactCardState extends State<CategoriesFactCard> {
                   MyIconButton(
                     icon: Icons.copy_rounded,
                     iconColor: AppColors.iconSecondary,
-                    onTap: () async {
-                      await FactUtils.copyToClipboard(widget.fact);
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Copied to clipboard')),
+                    onTap: () {
+                      FactUtils.copyToClipboard(widget.fact).then((_) {
+                        MyDialogs.myShowSnackBar(
+                          context,
+                          "Copied to clipboard",
+                          AppColors.success,
+                          AppColors.textPrimary,
                         );
-                      }
+                      });
                     },
                   ),
 
@@ -109,7 +111,6 @@ class _CategoriesFactCardState extends State<CategoriesFactCard> {
                     iconColor: AppColors.iconSecondary,
                     onTap: () {
                       FactUtils.shareFact(context, widget.fact);
-
                     },
                   ),
                 ],
