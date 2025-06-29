@@ -2,18 +2,34 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:fact_fuel/helper/my_dialogs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_constant.dart';
+import 'colors.dart';
 
 class FactUtils {
   static Future<void> copyToClipboard(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
   }
+
+  static void shareFact(BuildContext context, String factText) async {
+    try {
+      final message = "🔥 Did you know?\n\n$factText\n\nDownload FactFuel now and explore more amazing facts!";
+      await Share.share(message);
+    } catch (e) {
+      MyDialogs.myShowSnackBar(context, "Error sharing fact", AppColors.error, AppColors.textPrimary);
+    }
+  }
+
+
 
   static Future<void> toggleFavorite(String fact, bool isSaved) async {
     final user = FirebaseAuth.instance.currentUser;

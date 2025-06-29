@@ -1,4 +1,5 @@
 import 'package:fact_fuel/helper/custom_text_style.dart';
+import 'package:fact_fuel/helper/my_dialogs.dart';
 import 'package:fact_fuel/screens/dashboard_screen.dart';
 import 'package:fact_fuel/service/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import '../../helper/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  
+
   @override
   LoginScreenState createState() => LoginScreenState();
 }
@@ -65,7 +66,7 @@ class LoginScreenState extends State<LoginScreen>
     try {
       final user = await _authService.signInWithGoogle();
       if (!mounted) return;
-      
+
       if (user != null) {
         // Store navigation in a variable to avoid using context after async gap
         final navigator = Navigator.of(context);
@@ -78,29 +79,27 @@ class LoginScreenState extends State<LoginScreen>
           ),
         );
       } else {
-        _showErrorSnackBar("Login failed. Please try again.");
+        MyDialogs.myShowSnackBar(
+          context,
+          "Login failed. Please try again.",
+          Colors.red,
+          AppColors.textPrimary,
+        );
       }
     } catch (e) {
       if (mounted) {
-        _showErrorSnackBar("An error occurred: ${e.toString()}");
+        MyDialogs.myShowSnackBar(
+          context,
+          "An error occurred: ${e.toString()}",
+          Colors.red,
+          AppColors.textPrimary,
+        );
       }
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
       }
     }
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red[400],
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(10),
-      ),
-    );
   }
 
   @override
@@ -204,7 +203,9 @@ class LoginScreenState extends State<LoginScreen>
                             color:
                                 _currentFactIndex == index
                                     ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurface.withAlpha(128), // 50% opacity
+                                    : theme.colorScheme.onSurface.withAlpha(
+                                      128,
+                                    ), // 50% opacity
                           ),
                         ),
                       ),
@@ -216,9 +217,8 @@ class LoginScreenState extends State<LoginScreen>
                   // Google sign in button
                   Column(
                     children: [
-
                       Text(
-                        "Get Started in Seconds",  // Best option
+                        "Get Started in Seconds", // Best option
                         style: myTextStyle18(
                           fontWeight: FontWeight.w600,
                           textColor: Colors.black45,
@@ -241,30 +241,25 @@ class LoginScreenState extends State<LoginScreen>
                             ),
                           ],
                         ),
-                        child: ElevatedButton(
-                          onPressed: _isLoading ? null : loginWithGoogle,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black87,
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 0,
-                          ),
-                          child:
-                              _isLoading
-                                  ? SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation(
-                                        Colors.black,
-                                      ),
+                        child:
+                            _isLoading
+                                ? Center(
+                                  child:
+                                      MyDialogs.myCircularProgressIndicator(),
+                                )
+                                : ElevatedButton(
+                                  onPressed:
+                                      _isLoading ? null : loginWithGoogle,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.black87,
+                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                  )
-                                  : Row(
+                                    elevation: 0,
+                                  ),
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(
@@ -282,7 +277,7 @@ class LoginScreenState extends State<LoginScreen>
                                       ),
                                     ],
                                   ),
-                        ),
+                                ),
                       ),
                     ],
                   ),

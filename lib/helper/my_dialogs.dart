@@ -149,48 +149,13 @@ class MyDialogs {
     );
   }
 
-  static Widget myCircularProgressIndicator(Size size){
-   return  Stack(
-      alignment: Alignment.center,
-      children: [
-        // Background track
-        SizedBox(
-          height: size.width * 0.2,
-          width: size.width * 0.2,
-          child: CircularProgressIndicator(
-            value: 1.0,
-            strokeWidth: 10,
-            valueColor: AlwaysStoppedAnimation(Colors.grey[300]),
-          ),
-        ),
-
-        /// ---- Animated progress ----- ////
-        TweenAnimationBuilder(
-          tween: Tween(begin: 0.0, end: 0.95),
-          duration: Duration(seconds: 2),
-          curve: Curves.easeInOut,
-          builder: (context, value, _) {
-            return SizedBox(
-              height: size.width * 0.2,
-              width: size.width * 0.2,
-              child: CircularProgressIndicator(
-                value: value,
-                strokeWidth: 5,
-                strokeCap: StrokeCap.round,
-                valueColor: AlwaysStoppedAnimation(
-                  ColorTween(
-                    begin: AppColors.primaryLight,
-                    end: AppColors.primary,
-                  ).lerp(value)!,
-                ),
-              ),
-            );
-          },
-        ),
-
-
-      ],
-    );
+  static Widget myCircularProgressIndicator(){
+   return  SizedBox(
+     child: CircularProgressIndicator(
+       strokeWidth: 8,
+       color: AppColors.primaryLight,
+     ),
+   );
   }
 
 }

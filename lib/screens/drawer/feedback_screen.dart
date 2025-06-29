@@ -336,7 +336,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       /// Submit Button
                       _isSubmitting
                           ? Center(
-                            child: MyDialogs.myCircularProgressIndicator(size),
+                            child: MyDialogs.myCircularProgressIndicator(),
                           )
                           : SizedBox(
                             width: double.infinity,

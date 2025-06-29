@@ -7,11 +7,16 @@ import 'package:glass_kit/glass_kit.dart';
 import '../helper/custom_text_style.dart';
 import '../helper/fact_utils.dart';
 
-class CategoriesFactCard extends StatelessWidget {
+class CategoriesFactCard extends StatefulWidget {
   final String fact;
 
   const CategoriesFactCard({super.key, required this.fact});
 
+  @override
+  State<CategoriesFactCard> createState() => _CategoriesFactCardState();
+}
+
+class _CategoriesFactCardState extends State<CategoriesFactCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -50,7 +55,10 @@ class CategoriesFactCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(fact, style: myTextStyle16(textColor: Colors.white70)),
+              Text(
+                widget.fact,
+                style: myTextStyle16(textColor: Colors.white70),
+              ),
               SizedBox(height: size.height * 0.01),
 
               Divider(color: Colors.white10, thickness: 2),
@@ -62,7 +70,7 @@ class CategoriesFactCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   StreamBuilder<DocumentSnapshot>(
-                    stream: FactUtils.favoriteStatusStream(fact),
+                    stream: FactUtils.favoriteStatusStream(widget.fact),
                     builder: (context, favSnapshot) {
                       bool isSaved = favSnapshot.data?.exists ?? false;
 
@@ -75,7 +83,9 @@ class CategoriesFactCard extends StatelessWidget {
                         iconColor:
                             isSaved ? Colors.red : AppColors.iconSecondary,
 
-                        onTap: () => FactUtils.toggleFavorite(fact, isSaved),
+                        onTap:
+                            () =>
+                                FactUtils.toggleFavorite(widget.fact, isSaved),
                       );
                     },
                   ),
@@ -85,7 +95,7 @@ class CategoriesFactCard extends StatelessWidget {
                     icon: Icons.copy_rounded,
                     iconColor: AppColors.iconSecondary,
                     onTap: () async {
-                      await FactUtils.copyToClipboard(fact);
+                      await FactUtils.copyToClipboard(widget.fact);
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Copied to clipboard')),
@@ -97,8 +107,10 @@ class CategoriesFactCard extends StatelessWidget {
                   MyIconButton(
                     icon: Icons.share_rounded,
                     iconColor: AppColors.iconSecondary,
+                    onTap: () {
+                      FactUtils.shareFact(context, widget.fact);
 
-                    onTap: () {},
+                    },
                   ),
                 ],
               ),

@@ -32,11 +32,18 @@ class _HomeScreenState extends State<HomeScreen> {
     loadFact();
   }
 
+  bool isOffline = false;
+
   Future<void> loadFact() async {
-    final factData = await FactUtils.getDailyFact();
-    setState(() {
-      dailyFact = factData?['fact'] ?? 'No fact found';
-    });
+    try {
+      final factData = await FactUtils.getDailyFact();
+      setState(() {
+        dailyFact = factData?['fact'] ?? 'No fact found';
+        isOffline = false;
+      });
+    } catch (e) {
+      setState(() => isOffline = true);
+    }
   }
 
   @override

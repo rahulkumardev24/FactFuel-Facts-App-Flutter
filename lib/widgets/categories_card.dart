@@ -9,7 +9,8 @@ class CategoryCard extends StatelessWidget {
   final int factCount;
   final VoidCallback onTap;
 
-  const CategoryCard({super.key,
+  const CategoryCard({
+    super.key,
     required this.name,
     required this.icon,
     required this.color,
