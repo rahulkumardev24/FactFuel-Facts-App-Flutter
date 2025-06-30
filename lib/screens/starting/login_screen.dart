@@ -4,7 +4,6 @@ import 'package:fact_fuel/screens/dashboard_screen.dart';
 import 'package:fact_fuel/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-
 import '../../helper/colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,12 +21,12 @@ class LoginScreenState extends State<LoginScreen>
   late Animation<double> _scaleAnimation;
 
   final List<String> facts = [
+    "Octopuses have three hearts and blue blood.",
     'Hot water freezes faster than cold water',
+    "Human teeth are as strong as shark teeth, but not as sharp.",
     'The tongue is the strongest muscle in the body relative to its size',
-    'The world\'s quietest room is the anechoic chamber at Microsoft',
-    'The deepest place on Earth is the Mariana Trench',
-    'Bananas are berries, but strawberries aren\'t',
-    'The world\'s largest living structure is the Great Barrier Reef',
+    "Wearing headphones for just one hour can increase bacteria in your ears by 700%.",
+    'Your stomach acid is strong enough to dissolve razor blades.',
   ];
 
   int _currentFactIndex = 0;
@@ -105,28 +104,11 @@ class LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final theme = Theme.of(context);
-
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Stack(
           children: [
-            // Background gradient
-            AnimatedContainer(
-              duration: Duration(milliseconds: 500),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppColors.primary.withAlpha(70),
-                    AppColors.primary.withAlpha(100),
-                  ],
-                ),
-              ),
-            ),
-
             Container(
               height: size.height,
               padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -149,6 +131,7 @@ class LoginScreenState extends State<LoginScreen>
                                 "Fact Fuel",
                                 style: myTextStyle26(
                                   fontWeight: FontWeight.bold,
+                                  textColor: AppColors.primaryLight,
                                 ),
                               ),
                             ),
@@ -156,9 +139,7 @@ class LoginScreenState extends State<LoginScreen>
                           SizedBox(height: 8),
                           Text(
                             "Fuel your curiosity with amazing facts",
-                            style: myTextStyle16(
-                              textColor: theme.colorScheme.secondary,
-                            ),
+                            style: myTextStyle16(textColor: AppColors.primary),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -174,7 +155,7 @@ class LoginScreenState extends State<LoginScreen>
                     child: CardSwiper(
                       cardsCount: facts.length,
                       cardBuilder: (context, index, _, __) {
-                        return _buildFactCard(size, facts[index], theme);
+                        return _buildFactCard(size, facts[index]);
                       },
                       onSwipe: (previousIndex, currentIndex, direction) {
                         setState(() => _currentFactIndex = currentIndex ?? 0);
@@ -202,8 +183,8 @@ class LoginScreenState extends State<LoginScreen>
                             shape: BoxShape.circle,
                             color:
                                 _currentFactIndex == index
-                                    ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurface.withAlpha(
+                                    ? Colors.yellow
+                                    : Colors.yellow.withAlpha(
                                       128,
                                     ), // 50% opacity
                           ),
@@ -214,71 +195,52 @@ class LoginScreenState extends State<LoginScreen>
 
                   Spacer(),
 
-                  // Google sign in button
+                  /// Google sign in button
                   Column(
                     children: [
                       Text(
-                        "Get Started in Seconds", // Best option
+                        "Get Started in Seconds",
                         style: myTextStyle18(
                           fontWeight: FontWeight.w600,
-                          textColor: Colors.black45,
+                          textColor: AppColors.textPrimary.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                       ),
                       SizedBox(height: 8),
 
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        width: double.infinity,
-                        height: 56,
-                        margin: EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, 0.1),
-                              blurRadius: 10,
-                              offset: Offset(0, 4),
+                      _isLoading
+                          ? Center(
+                            child: MyDialogs.myCircularProgressIndicator(),
+                          )
+                          : ElevatedButton(
+                            onPressed: _isLoading ? null : loginWithGoogle,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black87,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0,
                             ),
-                          ],
-                        ),
-                        child:
-                            _isLoading
-                                ? Center(
-                                  child:
-                                      MyDialogs.myCircularProgressIndicator(),
-                                )
-                                : ElevatedButton(
-                                  onPressed:
-                                      _isLoading ? null : loginWithGoogle,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: Colors.black87,
-                                    padding: EdgeInsets.symmetric(vertical: 16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    elevation: 0,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        'lib/assets/images/google_image.png',
-                                        height: 24,
-                                        width: 24,
-                                      ),
-                                      SizedBox(width: 12),
-                                      Text(
-                                        "Continue with Google",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'lib/assets/images/google_image.png',
+                                  height: size.height * 0.03,
+                                  width: size.height * 0.03,
+                                  fit: BoxFit.cover,
                                 ),
-                      ),
+                                SizedBox(width: 12),
+                                Text(
+                                  "Continue with Google",
+                                  style: myTextStyle16(),
+                                ),
+                              ],
+                            ),
+                          ),
                     ],
                   ),
 
@@ -292,29 +254,15 @@ class LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildFactCard(Size size, String fact, ThemeData theme) {
+  Widget _buildFactCard(Size size, String fact) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Decorative background
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.primaryLight.withAlpha(30),
-                  AppColors.primaryLight.withAlpha(80),
-                ],
-              ),
-            ),
-          ),
 
+      color: AppColors.primary,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
           /// Fact content
           Padding(
             padding: EdgeInsets.all(24),
@@ -334,14 +282,15 @@ class LoginScreenState extends State<LoginScreen>
                   textAlign: TextAlign.center,
                   style: myTextStyle18(
                     fontWeight: FontWeight.w600,
-                    textColor: theme.colorScheme.onSurface,
+                    textColor: AppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 16),
                 Text(
                   "Did you know?",
                   style: TextStyle(
-                    color: theme.colorScheme.surface,
+                    color: AppColors.textDark.withValues(alpha: 0.5),
+                    fontFamily: "primary",
                     fontStyle: FontStyle.italic,
                   ),
                 ),

@@ -95,6 +95,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   _searchQuery = value;
                 });
               },
+              style: myTextStyle16(textColor: AppColors.textSecondary),
               decoration: InputDecoration(
                 hintText: 'Search categories...',
                 prefixIcon: const Icon(
@@ -103,7 +104,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 ),
                 hintStyle: myTextStyle14(textColor: AppColors.textSecondary),
                 filled: true,
-
                 fillColor: AppColors.primaryLight.withValues(alpha: 0.15),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -333,7 +333,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   void dispose() {
     _searchController.dispose();
-    // Cancel any pending async operations
+    /// Cancel any pending async operations
     super.dispose();
   }
 }
