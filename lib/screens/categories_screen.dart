@@ -292,6 +292,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                           ),
                         );
+                      }else if (category['name'] == "Geography") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => CategoryFactsScreen(
+                              collectionName: "geography_facts",
+                              backGroundImage:
+                              "lib/assets/images/geography.jpg",
+                              appBarTitle: "Geography facts",
+                            ),
+                          ),
+                        );
                       }else if (category['name'] == "Psychology") {
                         Navigator.push(
                           context,
@@ -301,19 +314,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               collectionName: "psychology_facts",
                               backGroundImage:
                               "lib/assets/images/psychology.jpg",
-                              appBarTitle: "Psychology facts",
-                            ),
-                          ),
-                        );
-                      }else if (category['name'] == "Geography") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => CategoryFactsScreen(
-                              collectionName: "psychology_facts",
-                              backGroundImage:
-                              "lib/assets/images/geography.jpg",
                               appBarTitle: "Psychology facts",
                             ),
                           ),
