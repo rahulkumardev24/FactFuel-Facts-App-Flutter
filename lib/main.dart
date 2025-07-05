@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         statusBarBrightness: Brightness.dark,
       ),
       child: MaterialApp(
-        title: 'FactFuel',
+        title: 'Fact fuel',
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       ),
